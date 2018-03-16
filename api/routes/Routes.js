@@ -35,10 +35,13 @@ module.exports = server => {
 
     server.route({
       method: 'GET',
-      path: '/',
+      path: Paths.intern.path,
       config: {
         auth: false,
         tags: ['api']
+      },
+      handler: (request, h) => {
+        return 'Hello!';
       }
     })
 
@@ -48,6 +51,9 @@ module.exports = server => {
       config: {
         auth: false,
         tags: ['api']
+      },
+      handler: (request, h) => {
+        return 'Hello!';
       }
     })
 

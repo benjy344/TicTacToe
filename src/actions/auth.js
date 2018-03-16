@@ -9,6 +9,7 @@ export const LOGIN_FAILURE = 'LOGIN_FAILURE'
 
 
 function requestLogin(creds) {
+  console.log("requestLogin")
   return {
     type: LOGIN_REQUEST,
     isFetching: true,
@@ -39,18 +40,19 @@ function loginError(message) {
 // dispatches actions along the way
 export function loginUser(creds) {
 
-  // let config = {
-  //   method: 'POST',
-  //   headers: { 'Content-Type':'application/x-www-form-urlencoded' },
-  //   body: `username=${creds.username}&password=${creds.password}`
-  // }
+  let config = {
+    method: 'POST',
+    mode: 'cors',
+    headers: { 'Content-Type':'application/x-www-form-urlencoded', 'Access-Control-Allow-Origin':'*' },
+    body: `username=${creds.username}&password=${creds.password}`
+  }
 
   return dispatch => {
     // We dispatch requestLogin to kickoff the call to the API
     dispatch(requestLogin(creds))
 
     console.log(`http://${APP_IP}:${APP_PORT}/session/create`)
-    return fetch(`http://${APP_IP}:${APP_PORT}/session/create`)
+    return fetch(`http://${APP_IP}:${APP_PORT}/users`, config)
       .then(response => {
         console.log('jnkjnkjnkjn')
         response.json().then(user => ({ user, response }))

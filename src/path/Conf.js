@@ -1,4 +1,4 @@
 module.exports = {
-    APP_IP: '127.0.0.12',
-    APP_PORT: '3000'
+    APP_IP: '127.0.0.1',
+    APP_PORT: '3001'
 }
