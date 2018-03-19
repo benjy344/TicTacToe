@@ -9,14 +9,9 @@ import SessionController from '../controllers/SessionController.js'
 
 const validate = function (token, request, callback) {
   const publicKey = 'patate'
-  console.log("validate")
   jwt.verify(token, publicKey, (err, decoded) => {
-
-    if (err) {
-      return callback(err)
-    }
-    const credentials = request.auth.credentials
-    // .. do some additional credentials checking
+    if (err) return callback(err)
+    console.log(decoded, callback)
     return callback(null, true, decoded)
   })
 }
@@ -53,11 +48,7 @@ module.exports = server => {
         auth: 'jwt',
         tags: ['api']
       },
-      handler: (request, reply) => {
-        console.log('kjnkjnkjn')
-        reply({text: 'You used a Token!'})
-        // .header("Authorization", request.headers.authorization)
-      }
+      handler: UserController.getUsers
     })
 
     server.route({

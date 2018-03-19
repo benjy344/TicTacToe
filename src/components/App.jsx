@@ -2,9 +2,13 @@ import React, { Component } from 'react'
 import PropTypes            from 'prop-types'
 import { connect }          from 'react-redux'
 //import Nes                  from 'nes'
+import Store                from '../GlobalStore/Store'
 import { APP_IP, APP_PORT } from '../path/Conf'
 
+import { logoutUser }       from '../actions/auth'
+
 import Login                from './Login'
+import MainComponent        from './MainComponent'
 
 class App extends Component {
   constructor(props) {
@@ -25,32 +29,43 @@ class App extends Component {
     //   client.onUpdate = update => this.setState(update)
     // })
 
-    fetch(`http://${APP_IP}:${APP_PORT}/users`)
-    .then(data => {
-      data.json()
-      console.log(data)
-    })
-    //.then(json => this.setState(json))
-    .catch(err => console.log(err))
+    // fetch(`http://${APP_IP}:${APP_PORT}/users`)
+    // .then(data => {
+    //   data.json()
+    //   console.log(data)
+    // })
+    // //.then(json => this.setState(json))
+    // .catch(err => console.log(err))
   }
 
   getUser() {
     console.log('getusers')
-    fetch(`http://${APP_IP}:${APP_PORT}/users`)
+    fetch(`http://${APP_IP}:${APP_PORT}/users`, {
+        headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('id_token')
+        }
+    })
     .then(data => {
       //data.json()
-      console.log(data)
+      if(!data.ok) {
+        Store.dispatch(logoutUser())
+      }
+      console.log('data', data)
     })
     //.then(json => this.setState(json))
-    .catch(err => console.log(err))
+    .catch(err => console.log('err',err))
 
+  }
+
+  returnMain() {
+    if(this.props.isAuthenticated) return (<MainComponent />)
   }
 
   render() {
     return (
       <div>
         <Login />
-        <button onClick={this.getUser.bind(this)}>get user </button>
+        {this.returnMain()}
       </div>
     )
  }

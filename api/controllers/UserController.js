@@ -3,6 +3,7 @@ import User     from '../../models/userModel.js'
 
 const UserController = {
   getUsers: (request, reply) => {
+    console.log('getUsers')
     User.find({}, (err, users) => {
       console.log(users)
     })

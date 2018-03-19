@@ -11,7 +11,6 @@ export const LOGIN_FAILURE = 'LOGIN_FAILURE'
 
 
 function requestLogin(creds) {
-  console.log("requestLogin")
   return {
     type: LOGIN_REQUEST,
     isFetching: true,
