@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes            from 'prop-types'
 import { connect }          from 'react-redux'
-import Nes                  from 'nes'
+//import Nes                  from 'nes'
 import { APP_IP, APP_PORT } from '../path/Conf'
 
 import Login                from './Login'
@@ -15,31 +15,44 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const socket = `ws://${APP_IP}:${APP_PORT}`
-    const client = new Nes.Client(socket)
+    // const socket = `ws://${APP_IP}:${APP_PORT}`
+    // const client = new Nes.Client(socket)
 
-    client.connect(err => {
-      if (err) {
-        return console.log('err connecting', err)
-      }
-      client.onUpdate = update => this.setState(update)
-    })
-
-    // fetch(`http://${APP_IP}:${APP_PORT}/users`)
-    // .then(data => {
-    //   data.json()
-    //   console.log(data)
+    // client.connect(err => {
+    //   if (err) {
+    //     return console.log('err connecting', err)
+    //   }
+    //   client.onUpdate = update => this.setState(update)
     // })
-    // .then(json => this.setState(json))
-    // .catch(err => console.log(err))
+
+    fetch(`http://${APP_IP}:${APP_PORT}/users`)
+    .then(data => {
+      data.json()
+      console.log(data)
+    })
+    //.then(json => this.setState(json))
+    .catch(err => console.log(err))
+  }
+
+  getUser() {
+    console.log('getusers')
+    fetch(`http://${APP_IP}:${APP_PORT}/users`)
+    .then(data => {
+      //data.json()
+      console.log(data)
+    })
+    //.then(json => this.setState(json))
+    .catch(err => console.log(err))
+
   }
 
   render() {
-
-   if (this.isConnect) {
-      return <h1>Connect</h1>
-    }
-    return <Login />
+    return (
+      <div>
+        <Login />
+        <button onClick={this.getUser.bind(this)}>get user </button>
+      </div>
+    )
  }
 }
 

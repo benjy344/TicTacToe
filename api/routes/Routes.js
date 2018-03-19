@@ -9,7 +9,7 @@ import SessionController from '../controllers/SessionController.js'
 
 const validate = function (token, request, callback) {
   const publicKey = 'patate'
-  console.log('youyou')
+  console.log("validate")
   jwt.verify(token, publicKey, (err, decoded) => {
 
     if (err) {
@@ -48,7 +48,7 @@ module.exports = server => {
 
     server.route({
       method: 'GET',
-      path: '/coucou',
+      path: Paths.intern.users,
       config: {
         auth: 'jwt',
         tags: ['api']
@@ -56,7 +56,7 @@ module.exports = server => {
       handler: (request, reply) => {
         console.log('kjnkjnkjn')
         reply({text: 'You used a Token!'})
-        .header("Authorization", request.headers.authorization)
+        // .header("Authorization", request.headers.authorization)
       }
     })
 
@@ -72,15 +72,15 @@ module.exports = server => {
       }
     })
 
-    server.route({
-      method: 'GET',
-      path: Paths.intern.users,
-      config: {
-        auth: false,
-        tags: ['api'],
-        handler: UserController.getUsers
-      }
-    })
+    // server.route({
+    //   method: 'GET',
+    //   path: Paths.intern.users,
+    //   config: {
+    //     auth: false,
+    //     tags: ['api'],
+    //     handler: UserController.getUsers
+    //   }
+    // })
     server.route({
       method: 'POST',
       path: Paths.session.create,

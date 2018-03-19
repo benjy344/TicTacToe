@@ -50,7 +50,6 @@ const SessionController = {
 
     if (!userScheme.pseudo || !userScheme.userSearch.password) {
       return reply({message:"You must send the username and the password"}).code(400)
-      //return res.status(400).send("You must send the username and the password")
     }
 
     UserController.getUser(userScheme.userSearch, (user, err) => {
@@ -58,13 +57,11 @@ const SessionController = {
       if(err) return reply({message:"an error has occurred"}).code(500)
       if (!user) {
         return reply({message:"The username or password don't match"}).code(401)
-        //return res.status(401).send({message:"The username or password don't match", user: user})
       }
 
 
       if (user.password !== payload.password) {
         return reply({message:"The username or password don't match"}).code(401)
-       // return res.status(401).send("The username or password don't match")
       }
 
       return reply({
