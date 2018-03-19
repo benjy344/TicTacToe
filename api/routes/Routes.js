@@ -8,7 +8,8 @@ import SessionController from '../controllers/SessionController.js'
 
 
 const validate = function (token, request, callback) {
-  const publicKey = 'someKey'
+  const publicKey = 'patate'
+  console.log('youyou')
   jwt.verify(token, publicKey, (err, decoded) => {
 
     if (err) {
@@ -47,6 +48,20 @@ module.exports = server => {
 
     server.route({
       method: 'GET',
+      path: '/coucou',
+      config: {
+        auth: 'jwt',
+        tags: ['api']
+      },
+      handler: (request, reply) => {
+        console.log('kjnkjnkjn')
+        reply({text: 'You used a Token!'})
+        .header("Authorization", request.headers.authorization)
+      }
+    })
+
+    server.route({
+      method: 'GET',
       path: Paths.intern.login,
       config: {
         auth: false,
@@ -71,7 +86,16 @@ module.exports = server => {
       path: Paths.session.create,
       config: {
         auth: false,
-        handler: SessionController.create
+        handler: SessionController.create,
+        // validate: {
+        //   username: Joi.string().alphanum().min(3).max(30).required(),
+        //   password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/),
+        //   failAction: (request, reply, source, error) => {
+        //     reply({
+        //         idErr: 1
+        //     })
+        //   }
+        // }
       }
     })
   })

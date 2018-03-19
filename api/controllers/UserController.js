@@ -7,11 +7,10 @@ const UserController = {
       console.log(users)
     })
   },
-  getUser: (creds) => {
+  getUser: (creds, cb) => {
     User.findOne(creds, (err, user) => {
-      console.log(user)
-      if(err) return err
-      return user
+      if(err) return cb(null, err)
+      return cb(user)
     })
   }
 
