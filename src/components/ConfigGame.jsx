@@ -6,37 +6,31 @@ import Saloon               from './choicesConfig/Saloon'
 class ConfigGame extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      singlePlayer: true,
-      level: 1,
-      player: 'cross',
-      player2: null
-    }
+
   }
 
   changeSingle(single) {
-    this.setState({
-      singlePlayer: single
-    })
+    this.props.changeSingle(single)
   }
 
   changeLevel(level) {
-    this.setState({
-      level: level
-    })
+    this.props.changeLevel(level)
   }
 
   changePlayer(player) {
-    this.setState({
-      player: player
-    })
+    this.props.changePlayer(player)
   }
 
   renderChooseStep2() {
-    if(this.state.singlePlayer) {
+    if(this.props.singlePlayer) {
       return(
         <div>
-          <ChoiceLevel level={this.state.level} player={this.state.player} changeLevel={ this.changeLevel.bind(this) } changePlayer={ this.changePlayer.bind(this) }/>
+          <ChoiceLevel
+            level={this.props.level}
+            player={this.props.player}
+            changeLevel={ this.changeLevel.bind(this) }
+            changePlayer={ this.changePlayer.bind(this) }
+          />
         </div>
       )
 
@@ -44,8 +38,10 @@ class ConfigGame extends Component {
       return <Saloon />
     }
   }
+
+
   play() {
-    console.log('play')
+    this.props.play()
   }
 
 
@@ -56,19 +52,29 @@ class ConfigGame extends Component {
         <div>
           <div className="radio">
             <label>
-              <input type="radio" value="single" checked={this.state.singlePlayer} onChange={this.changeSingle.bind(this, true)} />
+              <input
+                type="radio"
+                value="single"
+                checked={this.props.singlePlayer}
+                onChange={this.changeSingle.bind(this, true)}
+              />
               Single Player
             </label>
           </div>
           <div className="radio">
             <label>
-              <input type="radio" value="multi" checked={!this.state.singlePlayer} onChange={this.changeSingle.bind(this, false)} />
+              <input
+                type="radio"
+                value="multi"
+                checked={!this.props.singlePlayer}
+                onChange={this.changeSingle.bind(this, false)}
+              />
               Multiplayer
             </label>
           </div>
         </div>
         {this.renderChooseStep2()}
-        <button onClick={this.play.bind(this)} disabled={!this.state.singlePlayer && this.state.player2 === null} >Play</button>
+        <button onClick={this.play.bind(this)} disabled={!this.props.singlePlayer && this.props.player2 === null} >Play</button>
       </div>
 
     )

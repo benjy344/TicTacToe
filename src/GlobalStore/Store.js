@@ -3,11 +3,13 @@ import { combineReducers, createStore, applyMiddleware } from 'redux'
 import thunk  from 'redux-thunk'
 import logger from 'redux-logger'
 
-import { auth, initialState as authStore } from '../reducers/reducer'
+import { auth, initialState as authStore } from '../reducers/authReducer'
+import { game, initialState as gameStore } from '../reducers/gameReducer'
 
 // Combine all reducers
 const reducers = combineReducers({
-    auth
+    auth,
+    game
 })
 
 // Create a middleware to wraps an data to delay its evaluation
@@ -22,7 +24,8 @@ const enhancer = applyMiddleware(...middlewares)
 
 // Define Global Store
 const GlobalStore = {
-            auth: authStore
+            auth: authStore,
+            game: gameStore
           }
 
 // Create the Store
