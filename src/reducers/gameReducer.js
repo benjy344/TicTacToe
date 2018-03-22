@@ -16,10 +16,7 @@ export function game(state = initialState, action) {
 
   case CHANGE_NUMBER_PLAYER:
     return Object.assign({}, state, {
-      singlePlayer: action.singlePlayer,
-      level: 1,
-      player: 'cross',
-      player2: null
+      singlePlayer: action.singlePlayer
     })
   case CHANGE_LEVEL:
     return Object.assign({}, state, {

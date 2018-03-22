@@ -74,6 +74,48 @@ export function loginUser(creds) {
   }
 }
 
+export function createUser(creds) {
+
+  let config = {
+    method: 'POST',
+    body: JSON.stringify({
+      username: creds.username,
+      email: creds.email,
+      password: creds.password
+    })
+  }
+  return dispatch => {
+    return fetch(`http://${APP_IP}:${APP_PORT}/users/create`, config)
+    .then( (response) => {
+      response.json()
+      .then(user => ({ user, response })).then(({ user, response }) =>  {
+        console.log(user, response)
+        if(!response.ok) {
+          dispatch(loginError(user.message))
+        } else {
+          const newUser = {user: user.pseudo, password: user.password}
+          dispatch(loginUser(newUser))
+        }
+
+        // if (!response.ok) {
+        //   // If there was a problem, we want to
+        //   // dispatch the error condition
+        //   dispatch(loginError(user.message))
+        //   return Promise.reject(user)
+        // } else {
+        //   // If login was successful, set the token in local storage
+        //   localStorage.setItem('id_token', user.id_token)
+        //   // Dispatch the success action
+        //   dispatch(receiveLogin(user))
+        // }
+      })
+
+    })
+    .catch(err => console.log("Error: ", err))
+
+  }
+}
+
 export const LOGOUT_REQUEST = 'LOGOUT_REQUEST'
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS'
 export const LOGOUT_FAILURE = 'LOGOUT_FAILURE'

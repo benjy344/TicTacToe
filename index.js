@@ -6,6 +6,7 @@ import inert                from 'inert'
 import Nes                  from 'nes'
 import Mongoose             from 'mongoose'
 import UserModel            from './models/userModel.js'
+import SessionController    from './api/controllers/SessionController.js'
 import routes               from './api/routes/Routes'
 // import Db                   from './api/conf/Db'
 
@@ -52,8 +53,7 @@ server.register(Nes, err => {
       console.log(err)
       throw err
     }
-    console.log('Broadcast not ready =======> ')
-    //SpaceCraftController.broadcast = data => server.broadcast(data)
+    SessionController.broadcast = data => server.broadcast(data)
 })
 
 /* ##### INITIALIZE DB CONNECTION ##### */

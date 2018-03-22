@@ -1,6 +1,7 @@
 import Joi               from 'joi'
 import path              from 'path'
 import jwt               from 'jsonwebtoken'
+import Nes               from 'nes'
 
 import Paths             from '../conf/Paths'
 import UserController    from '../controllers/UserController.js'
@@ -11,7 +12,6 @@ const validate = function (token, request, callback) {
   const publicKey = 'patate'
   jwt.verify(token, publicKey, (err, decoded) => {
     if (err) return callback(err)
-    console.log(decoded, callback)
     return callback(null, true, decoded)
   })
 }
@@ -52,6 +52,29 @@ module.exports = server => {
     })
 
     server.route({
+      method: 'POST',
+      path: Paths.intern.createUsers,
+      config: {
+        auth: false,
+        tags: ['api'],
+        validate: {
+          payload: {
+            username: Joi.string().alphanum().min(3).max(30).required(),
+            password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required(),
+            email: Joi.string().email().required(),
+          },
+          failAction: (request, reply, source, error) => {
+            console.log(error.data.details[0].message)
+            reply({
+                errorMessage: error.data.details[0].message
+            }).code(401)
+          }
+        },
+        handler: UserController.createUser
+      }
+    })
+
+    server.route({
       method: 'GET',
       path: Paths.intern.login,
       config: {
@@ -63,15 +86,6 @@ module.exports = server => {
       }
     })
 
-    // server.route({
-    //   method: 'GET',
-    //   path: Paths.intern.users,
-    //   config: {
-    //     auth: false,
-    //     tags: ['api'],
-    //     handler: UserController.getUsers
-    //   }
-    // })
     server.route({
       method: 'POST',
       path: Paths.session.create,
