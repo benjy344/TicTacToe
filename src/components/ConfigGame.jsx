@@ -4,10 +4,6 @@ import ChoiceLevel          from './choicesConfig/ChoiceLevel'
 import Saloon               from './choicesConfig/Saloon'
 
 class ConfigGame extends Component {
-  constructor(props) {
-    super(props)
-
-  }
 
   changeSingle(single) {
     this.props.changeSingle(single)

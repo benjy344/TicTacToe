@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import PropTypes            from 'prop-types'
 import { connect }          from 'react-redux'
+import jwt                  from 'jsonwebtoken'
 import Nes                  from 'nes'
 import Store                from '../GlobalStore/Store'
-import { logoutUser }       from '../actions/auth'
 import {  changeNumberPlayer,
           changeLevel,
           changePlayer,
-          addPlayer }       from '../actions/game'
+          addPlayer }       from '../actions/gameConfig'
+import { newGame }            from '../actions/game'
 import ConfigGame           from './ConfigGame'
 import Game                 from './Game'
 import { APP_IP, APP_PORT } from '../path/Conf'
@@ -25,14 +26,19 @@ class MainComponent extends Component {
   componentDidMount() {
     const socket = `ws://${APP_IP}:${APP_PORT}`
     const client = new Nes.Client(socket)
-    console.log(client)
-    client.connect(err => {
+
+    const handler = (update, flags) => {
+      console.log(update)
+        // update -> { id: 5, status: 'complete' }
+        // Second publish is not received (doesn't match)
+    }
+
+    client.connect({ auth: { headers: { Authorization: 'Bearer ' + localStorage.getItem('id_token') } } }, err => {
         if (err) {
-            return console.log('err connecting', err)
+          return console.log('err connecting', err)
         }
-        client.onUpdate = update => {
-          console.log('-----', update)
-        }
+        console.log(client.subscribe)
+        client.subscribe('/game/start/'+jwt.verify(localStorage.getItem('id_token'), 'patate').id, handler)
     })
   }
 
@@ -56,6 +62,11 @@ class MainComponent extends Component {
     this.setState({
       startGame: true
     })
+
+    let player1 = jwt.verify(localStorage.getItem('id_token'), 'patate').id
+    let player2 = this.props.player2.id
+
+    Store.dispatch(newGame(player1, player2))
   }
 
   render() {
@@ -86,13 +97,12 @@ MainComponent.propTypes = {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(state)
   return {
     isAuthenticated: state.auth.isAuthenticated,
-    singlePlayer:    state.game.singlePlayer,
-    level:           state.game.level,
-    player:          state.game.player,
-    player2:         state.game.player2
+    singlePlayer:    state.gameConfig.singlePlayer,
+    level:           state.gameConfig.level,
+    player:          state.gameConfig.player,
+    player2:         state.gameConfig.player2
   }
 }
 

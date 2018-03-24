@@ -35,8 +35,7 @@ function getUserScheme(payload) {
 }
 
 function createToken(user) {
-  //console.log('---', jwt.sign(_.omit(user, 'password'), 'patate', { expiresInMinutes: 60*5 }))
-  return jwt.sign({pseudo: user.pseudo, games: user.games}, 'patate')
+  return jwt.sign({pseudo: user.pseudo, games: user.games, id: user._id}, 'patate')
 }
 
 

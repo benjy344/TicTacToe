@@ -5,10 +5,12 @@ import logger from 'redux-logger'
 
 import { auth, initialState as authStore } from '../reducers/authReducer'
 import { game, initialState as gameStore } from '../reducers/gameReducer'
+import { gameConfig, initialState as gameConfigStore } from '../reducers/gameConfigReducer'
 
 // Combine all reducers
 const reducers = combineReducers({
     auth,
+    gameConfig,
     game
 })
 
@@ -25,6 +27,7 @@ const enhancer = applyMiddleware(...middlewares)
 // Define Global Store
 const GlobalStore = {
             auth: authStore,
+            gameConfig: gameConfigStore,
             game: gameStore
           }
 

@@ -1,30 +1,37 @@
 
 import {
-  CHANGE_NUMBER_PLAYER, CHANGE_LEVEL, CHANGE_PLAYER
+  NEW_GAME, HANDLE_CLICK, ERROR_GAME
 } from '../actions/game'
 
 export const initialState = {
-    startGame: false,
-    singlePlayer: true,
-    level: 1,
-    player: 'cross',
-    player2: null
+    id: null,
+    player1: null,
+    player2: null,
+    history:  [
+      {
+        squares: [null, null, null, null, null, null, null, null, null, null]
+      }
+    ],
+    xIsNext: true,
+    stepNumber: 0,
+    errorMessage: ''
 }
 
 export function game(state = initialState, action) {
   switch (action.type) {
 
-  case CHANGE_NUMBER_PLAYER:
+  case NEW_GAME:
     return Object.assign({}, state, {
-      singlePlayer: action.singlePlayer
+      id: action.id,
+      player1: action.player1,
+      player2: action.player2
     })
-  case CHANGE_LEVEL:
+  case ERROR_GAME:
     return Object.assign({}, state, {
-      level: action.level
-    })
-  case CHANGE_PLAYER:
-    return Object.assign({}, state, {
-      player: action.player
+      id: null,
+      player1: null,
+      player2: null,
+      errorMessage: action.errorMessage
     })
 
   default:

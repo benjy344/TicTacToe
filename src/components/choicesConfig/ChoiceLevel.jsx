@@ -2,11 +2,6 @@ import React, { Component } from 'react'
 
 class ConfigGame extends Component {
 
-  constructor(props) {
-    super(props)
-
-  }
-
   changeLevel(level) {
     this.props.changeLevel(level)
   }
