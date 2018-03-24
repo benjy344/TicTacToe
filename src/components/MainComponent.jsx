@@ -8,7 +8,8 @@ import {  changeNumberPlayer,
           changeLevel,
           changePlayer,
           addPlayer }       from '../actions/gameConfig'
-import { newGame }            from '../actions/game'
+import {  newGame,
+          createGameSuccess}from '../actions/game'
 import ConfigGame           from './ConfigGame'
 import Game                 from './Game'
 import { APP_IP, APP_PORT } from '../path/Conf'
@@ -29,15 +30,18 @@ class MainComponent extends Component {
 
     const handler = (update, flags) => {
       console.log(update)
-        // update -> { id: 5, status: 'complete' }
-        // Second publish is not received (doesn't match)
+      if(update._id){
+        Store.dispatch(createGameSuccess(update))
+        this.setState({
+          startGame: true
+        })
+      }
     }
 
     client.connect({ auth: { headers: { Authorization: 'Bearer ' + localStorage.getItem('id_token') } } }, err => {
         if (err) {
           return console.log('err connecting', err)
         }
-        console.log(client.subscribe)
         client.subscribe('/game/start/'+jwt.verify(localStorage.getItem('id_token'), 'patate').id, handler)
     })
   }
@@ -59,10 +63,6 @@ class MainComponent extends Component {
   }
 
   play() {
-    this.setState({
-      startGame: true
-    })
-
     let player1 = jwt.verify(localStorage.getItem('id_token'), 'patate').id
     let player2 = this.props.player2.id
 
@@ -93,7 +93,11 @@ class MainComponent extends Component {
 }
 
 MainComponent.propTypes = {
-  dispatch: PropTypes.func.isRequired
+  isAuthenticated: PropTypes.bool,
+  singlePlayer:    PropTypes.bool,
+  level:           PropTypes.number,
+  player:          PropTypes.string,
+  player2:         PropTypes.object
 }
 
 const mapStateToProps = (state, ownProps) => {

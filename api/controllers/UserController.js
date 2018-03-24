@@ -10,6 +10,15 @@ const UserController = {
       console.log(users)
     })
   },
+  getUserById: (request, cb) => {
+    User.findOne({_id:request.params.id}, (err, user) => {
+      if(err || !user){
+        console.log('error get user by id ', err)
+        return cb(err)
+      }
+      cb(user, null)
+    })
+  },
 
   createUser: (req, cb) => {
     const payload = req.payload

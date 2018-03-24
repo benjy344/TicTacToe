@@ -9,6 +9,9 @@ module.exports = {
         users: `${path}users`,
         createUsers: `${path}users/create`
     },
+    users: {
+        getById: `${path}users/{id}`
+    },
     session: {
         create: `${path}session/create`,
         destroy: `${path}session/destroy`

@@ -7,7 +7,7 @@ import Paths             from '../conf/Paths'
 import UserController    from '../controllers/UserController.js'
 import SessionController from '../controllers/SessionController.js'
 import GameController    from '../controllers/GameController.js'
-
+require('dotenv').config()
 
 const validate = function (token, request, callback) {
   const publicKey = 'patate'
@@ -40,10 +40,8 @@ module.exports = server => {
         tags: ['api'],
         handler: (request, h) => {
           const payload = JSON.parse(request.payload)
-          console.log("-----------", payload.player1)
-          console.log(Paths.game.start, payload.player1, Paths.game.start+payload.player1)
-          server.publish(`${Paths.game.start}/${payload.player1}`, { id: 5, status: 'complete' });
-          server.publish(`${Paths.game.start}/${payload.player2}`, { id: 6, status: 'initial' });
+          server.publish(`${Paths.game.start}/${payload.player1}`, payload.game);
+          server.publish(`${Paths.game.start}/${payload.player2}`, payload.game);
         }
       }
     })
@@ -71,6 +69,16 @@ module.exports = server => {
           server.broadcast(request.auth.credentials)
           //reply({lol:'lol'}).code(200)
         }
+      }
+    })
+
+    server.route({
+      method: 'GET',
+      path: Paths.users.getById,
+      config: {
+        auth: 'jwt',
+        tags: ['api'],
+        handler: UserController.getUserById
       }
     })
 

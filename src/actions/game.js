@@ -11,7 +11,7 @@ function gameError(message) {
     errorMessage: message
   }
 }
- function createGameSuccess(game) {
+export function createGameSuccess(game) {
   return {
     type: NEW_GAME,
     id: game._id,
@@ -41,7 +41,17 @@ export function newGame(player1, player2) {
         } else {
           dispatch(createGameSuccess(game))
 
-          fetch(`http://${APP_IP}:${APP_PORT}/game/start`, config)
+          const configStart = {
+            method: 'POST',
+            headers: { Authorization: 'Bearer ' + localStorage.getItem('id_token') },
+            body: JSON.stringify({
+              player1: player1,
+              player2: player2,
+              game: game
+            })
+          }
+
+          fetch(`http://${APP_IP}:${APP_PORT}/game/start`, configStart)
           .then((response) => {console.log(response)})
           .catch(err => console.log("Error: ", err))
         }
@@ -49,16 +59,6 @@ export function newGame(player1, player2) {
     })
     .catch(err => console.log("Error: ", err))
   }
-
-
-
-
-  // return {
-  //   type: NEW_GAME,
-  //   id: id
-  //   player1: player1
-  //   player2: player2
-  // }
 }
 
 export function handleClick(history) {

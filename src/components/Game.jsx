@@ -1,6 +1,11 @@
 import React, { Component } from 'react'
+import PropTypes            from 'prop-types'
+import { connect }          from 'react-redux'
+
+import { addPlayer }        from '../actions/gameConfig'
 
 import Board                from './game/Board'
+import Store                from '../GlobalStore/Store'
 
 
 class Game extends Component {
@@ -14,6 +19,13 @@ class Game extends Component {
       ],
       stepNumber: 0,
       xIsNext: true
+    }
+  }
+
+  componentDidMount() {
+
+    if(this.props.player2 === null) {
+      Store.dispatch(addPlayer(this.props.game.player1))
     }
   }
 
@@ -103,4 +115,24 @@ class Game extends Component {
   }
 }
 
-export default Game
+Game.propTypes = {
+  isAuthenticated: PropTypes.bool,
+  singlePlayer:    PropTypes.bool,
+  level:           PropTypes.number,
+  player:          PropTypes.string,
+  player2:         PropTypes.object,
+  game:            PropTypes.object
+}
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    isAuthenticated: state.auth.isAuthenticated,
+    singlePlayer:    state.gameConfig.singlePlayer,
+    level:           state.gameConfig.level,
+    player:          state.gameConfig.player,
+    player2:         state.gameConfig.player2,
+    game:            state.game
+  }
+}
+
+export default connect(mapStateToProps)(Game)
