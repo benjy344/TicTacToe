@@ -31,6 +31,7 @@ module.exports = server => {
     server.auth.default('jwt')
 
     server.subscription(Paths.game.start+'/{id}')
+    server.subscription(Paths.game.play+'/{id}')
 
     server.route({
       method: 'POST',
@@ -40,8 +41,25 @@ module.exports = server => {
         tags: ['api'],
         handler: (request, h) => {
           const payload = JSON.parse(request.payload)
-          server.publish(`${Paths.game.start}/${payload.player1}`, payload.game);
-          server.publish(`${Paths.game.start}/${payload.player2}`, payload.game);
+          server.publish(`${Paths.game.start}/${payload.player1}`, payload.game)
+          server.publish(`${Paths.game.start}/${payload.player2}`, payload.game)
+        }
+      }
+    })
+
+    server.route({
+      method: 'POST',
+      path: Paths.game.play,
+      config: {
+        auth: 'jwt',
+        tags: ['api'],
+        handler: (req, cb) => {
+          const payload = JSON.parse(req.payload)
+          GameController.play(req, (updatedGame) => {
+            server.publish(`${Paths.game.play}/${payload.player1}`, updatedGame)
+            server.publish(`${Paths.game.play}/${payload.player2}`, updatedGame)
+            return cb({ok:'ok'}).code(200)
+          })
         }
       }
     })
@@ -53,7 +71,7 @@ module.exports = server => {
         auth: false,
         tags: ['api'],
         handler: (request, h) => {
-          return 'Hello!';
+          return 'Hello!'
         }
       }
     })

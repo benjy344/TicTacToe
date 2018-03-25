@@ -1,8 +1,13 @@
 import React, { Component } from 'react'
 import PropTypes            from 'prop-types'
 import { connect }          from 'react-redux'
+import jwt                  from 'jsonwebtoken'
+import Nes                  from 'nes'
+
+import { APP_IP, APP_PORT } from '../path/Conf'
 
 import { addPlayer }        from '../actions/gameConfig'
+import { updateGame }       from '../actions/game'
 
 import Board                from './game/Board'
 import Store                from '../GlobalStore/Store'
@@ -12,104 +17,143 @@ class Game extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      history: [
-        {
-          squares: Array(9).fill(null)
-        }
-      ],
-      stepNumber: 0,
-      xIsNext: true
+      players: {
+        X:this.props.game.player1,
+        O:this.props.game.player2
+      },
+      loading: true
+    }
+  }
+
+  componentWillMount() {
+    if(this.props.player2 === null ) {
+      Store.dispatch(addPlayer(this.props.game.player1))
+      setTimeout(() =>{
+        this.setState({
+          loading: false
+        })
+      }, 1000)
+
+    } else {
+      this.setState({
+        loading: false
+      })
     }
   }
 
   componentDidMount() {
+    const socket = `ws://${APP_IP}:${APP_PORT}`
+    const client = new Nes.Client(socket)
 
-    if(this.props.player2 === null) {
-      Store.dispatch(addPlayer(this.props.game.player1))
+    const handler = (update, flags) => {
+      if(update) {
+        Store.dispatch(updateGame(update))
+      }
     }
+
+    client.connect({ auth: { headers: { Authorization: 'Bearer ' + localStorage.getItem('id_token') } } }, err => {
+      if (err) {
+        return console.log('err connecting', err)
+      }
+      client.subscribe('/game/play/'+jwt.verify(localStorage.getItem('id_token'), 'patate').id, handler, (err)=> {
+        if(err) console.log(err)
+      })
+    })
   }
 
   handleClick(i) {
-    const history = this.state.history.slice(0, this.state.stepNumber + 1)
+    if(!this.isPlayerTurn() || this.props.game.winner ) return
+    const history = this.props.game.history.slice(0, this.props.game.stepNumber + 1)
     const current = history[history.length - 1]
     const squares = current.squares.slice()
-    if (this.calculateWinner(squares) || squares[i]) {
-      return
+
+    if(squares[i]) return
+
+    const config = {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + localStorage.getItem('id_token') },
+      body: JSON.stringify({
+        gameId: this.props.game.id,
+        player1: this.props.game.player1,
+        player2: this.props.game.player2,
+        history,
+        current,
+        squares,
+        xIsNext:this.props.game.xIsNext,
+        click: i
+      })
     }
-    squares[i] = this.state.xIsNext ? "X" : "O"
-    this.setState({
-      history: history.concat([
-        {
-          squares: squares
-        }
-      ]),
-      stepNumber: history.length,
-      xIsNext: !this.state.xIsNext
+
+    fetch(`http://${APP_IP}:${APP_PORT}/game/play`, config)
+    .then((response) => {
+      console.log(response)
     })
+    .catch((err) => {console.log('error play =>', err)})
   }
 
-  jumpTo(step) {
-    this.setState({
-      stepNumber: step,
-      xIsNext: (step % 2) === 0
-    })
-  }
+  // jumpTo(step) {
+  //   this.setState({
+  //     stepNumber: step,
+  //     xIsNext: (step % 2) === 0
+  //   })
+  // }
 
-  calculateWinner(squares) {
-    const lines = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6]
-    ]
-    for (let i = 0; i < lines.length; i++) {
-      const [a, b, c] = lines[i]
-      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return squares[a]
-      }
-    }
-    return null
+  isPlayerTurn() {
+    return (this.props.game.xIsNext && this.state.players.X === jwt.verify(localStorage.getItem('id_token'), 'patate').id) || (!this.props.game.xIsNext && this.state.players.O === jwt.verify(localStorage.getItem('id_token'), 'patate').id)
   }
 
   render() {
-    const history = this.state.history
-    const current = history[this.state.stepNumber]
-    const winner  = this.calculateWinner(current.squares)
+    const history = this.props.game.history
+    const current = history[this.props.game.stepNumber]
+    const winner  = this.props.game.winner
 
-    const moves = history.map((step, move) => {
-      const desc = move ?
-        'Go to move #' + move :
-        'Go to game start'
-      return (
-        <li key={move}>
-          <button onClick={() => this.jumpTo(move)}>{desc}</button>
-        </li>
-      )
-    })
+    // const moves = history.map((step, move) => {
+    //   // <ol>{moves}</ol>
+    //   const desc = move ?
+    //     'Go to move #' + move :
+    //     'Go to game start'
+    //   return (
+    //     <li key={move}>
+    //       <button onClick={() => this.jumpTo(move)}>{desc}</button>
+    //     </li>
+    //   )
+    // })
 
     let status
-    if (winner) {
-      status = "Winner: " + winner
-    } else {
-      status = "Next player: " + (this.state.xIsNext ? "X" : "O")
+    if(!this.state.loading){
+      if (winner) {
+        if(winner === this.props.player2.id) {
+          status = "Winner: " + this.props.player2.pseudo
+        } else {
+          status = "You Win !"
+        }
+      } else {
+        if( this.isPlayerTurn() ) {
+          status = "Is your turn"
+        } else {
+          status = this.props.player2.pseudo + " is playing ..."
+        }
+      }
     }
+
 
     return (
       <div className="game">
-        <div className="game-board">
-          <Board
-            squares={current.squares}
-            onClick={i => this.handleClick(i)}
-          />
+        {this.state.loading &&
+          <p>loading</p>}
+        {!this.state.loading &&
+        <div>
+          <div className="game-board">
+            <Board
+              squares={current.squares}
+              onClick={i => this.handleClick(i)}
+            />
+          </div>
+          <div className="game-info">
+            <div>{status}</div>
+          </div>
         </div>
-        <div className="game-info">
-          <div>{status}</div>
-          <ol>{moves}</ol>
-        </div>
+        }
       </div>
     )
   }

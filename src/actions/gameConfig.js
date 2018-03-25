@@ -50,6 +50,7 @@ export function addPlayer(player2) {
               return Promise.reject(player2)
             } else {
               dispatch(addPlayer(player2))
+
             }
           })
         }).catch(err => console.log("Error: ", err))

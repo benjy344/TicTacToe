@@ -1,6 +1,6 @@
 
 import {
-  NEW_GAME, HANDLE_CLICK, ERROR_GAME
+  NEW_GAME, ERROR_GAME, UPDATE_GAME
 } from '../actions/game'
 
 export const initialState = {
@@ -14,6 +14,7 @@ export const initialState = {
     ],
     xIsNext: true,
     stepNumber: 0,
+    winner: null,
     errorMessage: ''
 }
 
@@ -22,13 +23,25 @@ export function game(state = initialState, action) {
 
   case NEW_GAME:
     return Object.assign({}, state, {
-      id: action.id,
+      id:      action.id,
       player1: action.player1,
-      player2: action.player2
+      player2: action.player2,
+      ia:      action.ia,
+      history: action.history,
+      xIsNext: action.xIsNext,
+      stepNumber: action.stepNumber,
+      winner: action.winner
+    })
+  case UPDATE_GAME:
+    return Object.assign({}, state, {
+      history:    action.history,
+      xIsNext:    action.xIsNext,
+      stepNumber: action.stepNumber,
+      winner:     action.winner
     })
   case ERROR_GAME:
     return Object.assign({}, state, {
-      id: null,
+      id:      null,
       player1: null,
       player2: null,
       errorMessage: action.errorMessage

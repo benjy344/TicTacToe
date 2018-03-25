@@ -11,10 +11,13 @@ let gameSchema = new Schema({
     level: { type: Number, default: 1 }
   },
   history: [
-        {
-          squares: {type:Array, default: [null, null, null, null, null, null, null, null, null, null]}
-        }
-      ]
+    {
+      squares: {type: Array, default: [null, null, null, null, null, null, null, null, null, null]}
+    }
+  ],
+  winner: {},
+  stepNumber: { type: Number, default: 0 },
+  xIsNext: {type: Boolean, default: true }
 })
 
 export default Mongoose.model('games', gameSchema)

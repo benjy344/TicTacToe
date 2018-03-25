@@ -25,25 +25,29 @@ class MainComponent extends Component {
   }
 
   componentDidMount() {
-    const socket = `ws://${APP_IP}:${APP_PORT}`
-    const client = new Nes.Client(socket)
+    if(!this.props.game.ia || !this.props.game.ia.enabled) {
+      const socket = `ws://${APP_IP}:${APP_PORT}`
+      const client = new Nes.Client(socket)
 
-    const handler = (update, flags) => {
-      console.log(update)
-      if(update._id){
-        Store.dispatch(createGameSuccess(update))
-        this.setState({
-          startGame: true
-        })
+      const handler = (update, flags) => {
+        if(update._id){
+          Store.dispatch(createGameSuccess(update))
+          this.setState({
+            startGame: true
+          })
+        }
       }
+
+      client.connect({ auth: { headers: { Authorization: 'Bearer ' + localStorage.getItem('id_token') } } }, err => {
+          if (err) {
+            return console.log('err connecting', err)
+          }
+          client.subscribe('/game/start/'+jwt.verify(localStorage.getItem('id_token'), 'patate').id, handler, (err)=> {
+            if(err) console.log(err)
+        })
+      })
     }
 
-    client.connect({ auth: { headers: { Authorization: 'Bearer ' + localStorage.getItem('id_token') } } }, err => {
-        if (err) {
-          return console.log('err connecting', err)
-        }
-        client.subscribe('/game/start/'+jwt.verify(localStorage.getItem('id_token'), 'patate').id, handler)
-    })
   }
 
   changeSingle(single) {
@@ -64,9 +68,10 @@ class MainComponent extends Component {
 
   play() {
     let player1 = jwt.verify(localStorage.getItem('id_token'), 'patate').id
-    let player2 = this.props.player2.id
+    let player2 = (this.props.player2?this.props.player2.id: 'ia')
 
     Store.dispatch(newGame(player1, player2))
+
   }
 
   render() {
@@ -106,7 +111,8 @@ const mapStateToProps = (state, ownProps) => {
     singlePlayer:    state.gameConfig.singlePlayer,
     level:           state.gameConfig.level,
     player:          state.gameConfig.player,
-    player2:         state.gameConfig.player2
+    player2:         state.gameConfig.player2,
+    game:            state.game
   }
 }
 
