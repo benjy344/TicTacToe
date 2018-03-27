@@ -9,6 +9,8 @@
     "bcrypt": "^1.0.3",
     "boom": "^6.0.0",
     "dotenv": "^4.0.0",
+    "echarts": "^4.0.4",
+    "echarts-for-react": "^2.0.8",
     "hapi": "^16.6.2",
     "hapi-auth-jwt-simple": "^1.0.0",
     "hapi-swaggered": "^2.12.2",

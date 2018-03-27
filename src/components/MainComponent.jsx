@@ -15,6 +15,13 @@ import Game                 from './Game'
 import { APP_IP, APP_PORT } from '../path/Conf'
 import IaGame               from './IaGame.jsx'
 
+import ReactEchartsCore from 'echarts-for-react/lib/core'
+import echarts from 'echarts/lib/echarts'
+import 'echarts/lib/chart/pie'
+import 'echarts/lib/component/tooltip'
+import 'echarts/lib/component/legend'
+import 'echarts/lib/component/title'
+
 
 
 class MainComponent extends Component {
@@ -89,6 +96,22 @@ class MainComponent extends Component {
   }
 
   render() {
+
+    return {
+      <ReactEchartsCore
+  echarts={echarts}
+  option={this.getOption()}
+  notMerge={true}
+  lazyUpdate={true}
+  theme={"theme_name"}
+  onChartReady={this.onChartReadyCallback}
+  onEvents={EventsDict}
+  opts={} />
+    }
+
+  }
+
+  rrrender() {
     return (
       <div className="game">
         {(this.state.startGame || this.state.playIaGame) &&
