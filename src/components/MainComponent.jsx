@@ -13,6 +13,8 @@ import {  newGame,
 import ConfigGame           from './ConfigGame'
 import Game                 from './Game'
 import { APP_IP, APP_PORT } from '../path/Conf'
+import IaGame               from './IaGame.jsx'
+
 
 
 class MainComponent extends Component {
@@ -20,7 +22,8 @@ class MainComponent extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      startGame: false
+      startGame: false,
+      playIaGame: false
     }
   }
 
@@ -71,13 +74,23 @@ class MainComponent extends Component {
     let player2 = (this.props.player2?this.props.player2.id: 'ia')
 
     Store.dispatch(newGame(player1, player2))
-
+    if(player2 === 'ia') {
+      this.setState({
+        playIaGame: true
+      })
+    }
+  }
+  goBack() {
+    this.setState({
+      playIaGame: false,
+      startGame: false
+    })
   }
 
   render() {
     return (
       <div>
-        {!this.state.startGame &&
+        {(!this.state.startGame && !this.state.playIaGame) &&
         <ConfigGame
           changeSingle={this.changeSingle.bind(this)}
           changeLevel={this.changeLevel.bind(this)}
@@ -91,6 +104,10 @@ class MainComponent extends Component {
         />}
         {this.state.startGame &&
           <Game />}
+        {this.state.playIaGame &&
+          <IaGame />}
+        {(this.state.startGame || this.state.playIaGame) &&
+          <button onClick={this.goBack.bind(this)}>Retour</button>}
       </div>
 
     )

@@ -6,42 +6,27 @@ import Nes                  from 'nes'
 
 import { APP_IP, APP_PORT } from '../path/Conf'
 
-import { addPlayer }        from '../actions/gameConfig'
 import { updateGame }       from '../actions/game'
 
 import Board                from './game/Board'
 import Store                from '../GlobalStore/Store'
 
+import IA                   from '../ia/Ia'
+import iaState              from '../ia/State'
 
-class Game extends Component {
+
+class IaGame extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      players: {
-        X:this.props.game.player1,
-        O:this.props.game.player2
-      },
-      loading: true
+      ia: {}
     }
   }
 
-  componentWillMount() {
-    if(this.props.player2 === null ) {
-      Store.dispatch(addPlayer(this.props.game.player1))
-      setTimeout(() =>{
-        this.setState({
-          loading: false
-        })
-      }, 1000)
-
-    } else {
-      this.setState({
-        loading: false
-      })
-    }
-  }
+  componentWillMount
 
   componentDidMount() {
+
     const socket = `ws://${APP_IP}:${APP_PORT}`
     const client = new Nes.Client(socket)
 
@@ -59,15 +44,36 @@ class Game extends Component {
         if(err) console.log(err)
       })
     })
+
+    const ia                = new IA(this.props.level)
+    ia.currentState         = new iaState()
+    ia.currentState.squares = Array(9).fill(null)
+    ia.currentState.turn    = "X"
+
+    this.setState({
+      ia
+    })
+
   }
 
   handleClick(i) {
-    if(!this.isPlayerTurn() || this.props.game.winner ) return
+    if( this.props.game.winner ) return
     const history = this.props.game.history.slice(0, this.props.game.stepNumber + 1)
     const current = history[history.length - 1]
     const squares = current.squares.slice()
 
     if(squares[i]) return
+
+    squares[i] = "X"
+    let iaClick = null
+    if(history.length < 5){
+      const next = new iaState(this.state.ia.currentState)
+      next.squares[i] = "X"
+      next.advanceTurn()
+      this.state.ia.advanceTo(next)
+      iaClick = this.state.ia.notify('O', squares)
+      if(iaClick != null) squares[iaClick] = "O"
+    }
 
     const config = {
       method: 'POST',
@@ -75,28 +81,20 @@ class Game extends Component {
       body: JSON.stringify({
         gameId: this.props.game.id,
         player1: this.props.game.player1,
-        player2: this.props.game.player2,
         history,
         current,
         squares,
-        xIsNext:this.props.game.xIsNext,
-        click: i
+        click: i,
+        iaClick: iaClick
       })
     }
 
-    fetch(`http://${APP_IP}:${APP_PORT}/game/play`, config)
-    .then((response) => {
-      console.log(response)
+    fetch(`http://${APP_IP}:${APP_PORT}/game/playIa`, config)
+    .then((response, data, a, b, c) => {
+      console.log(response, data, a, b, c)
     })
     .catch((err) => {console.log('error play =>', err)})
   }
-
-  // jumpTo(step) {
-  //   this.setState({
-  //     stepNumber: step,
-  //     xIsNext: (step % 2) === 0
-  //   })
-  // }
 
   isPlayerTurn() {
     return (this.props.game.xIsNext && this.state.players.X === jwt.verify(localStorage.getItem('id_token'), 'patate').id) || (!this.props.game.xIsNext && this.state.players.O === jwt.verify(localStorage.getItem('id_token'), 'patate').id)
@@ -107,43 +105,25 @@ class Game extends Component {
     const current = history[this.props.game.stepNumber]
     const winner  = this.props.game.winner
 
-    // const moves = history.map((step, move) => {
-    //   // <ol>{moves}</ol>
-    //   const desc = move ?
-    //     'Go to move #' + move :
-    //     'Go to game start'
-    //   return (
-    //     <li key={move}>
-    //       <button onClick={() => this.jumpTo(move)}>{desc}</button>
-    //     </li>
-    //   )
-    // })
-
     let status
-    if(!this.state.loading){
-      if (winner) {
-        if(winner.equality) {
-          status = "It's a equality"
-        }else if(winner === this.props.player2.id) {
-          status = "Winner: " + this.props.player2.pseudo
-        } else {
-          status = "You Win !"
-        }
+    if (winner) {
+      if(winner.equality) {
+        status = "Equality"
       } else {
-        if( this.isPlayerTurn() ) {
-          status = "Is your turn"
-        } else {
-          status = this.props.player2.pseudo + " is playing ..."
-        }
+        status = "Winner: " + winner
+      }
+
+    } else {
+      if(history.length === 10) {
+        status = "Egality"
+      } else {
+        status = "Next player: " + (this.props.game.xIsNext ? "X" : "O")
       }
     }
 
 
     return (
       <div className="game">
-        {this.state.loading &&
-          <p>loading</p>}
-        {!this.state.loading &&
         <div>
           <div className="game-board">
             <Board
@@ -155,18 +135,16 @@ class Game extends Component {
             <div>{status}</div>
           </div>
         </div>
-        }
       </div>
     )
   }
 }
 
-Game.propTypes = {
+IaGame.propTypes = {
   isAuthenticated: PropTypes.bool,
   singlePlayer:    PropTypes.bool,
   level:           PropTypes.number,
   player:          PropTypes.string,
-  player2:         PropTypes.object,
   game:            PropTypes.object
 }
 
@@ -176,9 +154,8 @@ const mapStateToProps = (state, ownProps) => {
     singlePlayer:    state.gameConfig.singlePlayer,
     level:           state.gameConfig.level,
     player:          state.gameConfig.player,
-    player2:         state.gameConfig.player2,
     game:            state.game
   }
 }
 
-export default connect(mapStateToProps)(Game)
+export default connect(mapStateToProps)(IaGame)

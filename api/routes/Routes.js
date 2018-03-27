@@ -63,6 +63,22 @@ module.exports = server => {
         }
       }
     })
+    server.route({
+      method: 'POST',
+      path: Paths.game.playIa,
+      config: {
+        auth: 'jwt',
+        tags: ['api'],
+        handler: (req, cb) => {
+          console.log(req.payload)
+          const payload = JSON.parse(req.payload)
+          GameController.playIa(req, (updatedGame) => {
+            server.publish(`${Paths.game.play}/${payload.player1}`, updatedGame)
+            cb({updatedGame:'updatedGame'}).code(200)
+          })
+        }
+      }
+    })
 
     server.route({
       method: 'GET',
@@ -85,7 +101,6 @@ module.exports = server => {
         tags: ['api'],
         handler: (request, reply) => {
           server.broadcast(request.auth.credentials)
-          //reply({lol:'lol'}).code(200)
         }
       }
     })

@@ -108,22 +108,123 @@ const GameController = {
       })
 
     } else {
+      console.log(history.length)
+      if(history.length >= 9) {
+        // equality
+        Game.findOneAndUpdate(
+        {
+          '_id': gameId
+        }, {
+          '$set' : {
+            winner: {equality:true},
+            history: newHistory,
+            stepNumber: history.length,
+            xIsNext: !xIsNext
+           }
+        }, {new: true} )
+        .then( (game, err)=> {
+          if(err) console.log('error get game =>', err)
+          cb(game)
+          return
+        })
+      } else {
+        Game.findOneAndUpdate(
+        {
+          '_id': gameId
+        }, {
+          '$set' : {
+            history: newHistory,
+            stepNumber: history.length,
+            xIsNext: !xIsNext
+           }
+        }, {new: true} )
+        .then( (game, err)=> {
+          if(err) console.log('error get game =>', err)
+          cb(game)
+          return
+        })
+      }
 
+    }
+  },
+
+  playIa(req, cb) {
+    const payload = JSON.parse(req.payload)
+    const gameId  = payload.gameId
+    const player1 = payload.player1
+    const history = payload.history
+    const current = payload.current
+    const squares = payload.squares
+    const click   = payload.click
+    const clickIa = payload.clickIa
+
+    squares[click] = "X"
+    if(clickIa) squares[clickIa] = "O"
+
+    const newHistory = history.concat(
+      [
+        {
+          squares
+        }
+      ])
+
+    const calculateWinner = GameController.calculateWinner(squares)
+
+    if (calculateWinner) {
+      // set the winner
+      //return
       Game.findOneAndUpdate(
-      {
-        '_id': gameId
-      }, {
-        '$set' : {
-          history: newHistory,
-          stepNumber: history.length,
-          xIsNext: !xIsNext
-         }
-      }, {new: true} )
+        {
+          '_id': gameId
+        }, {
+          '$set' : {
+            winner: (calculateWinner==="X"?player1:{pseudo:'ia'}),
+            history: newHistory,
+            stepNumber: history.length
+           }
+        },{new: true} )
       .then( (game, err)=> {
         if(err) console.log('error get game =>', err)
         cb(game)
         return
       })
+
+    } else {
+      if(history.length === 5) {
+        Game.findOneAndUpdate(
+        {
+          '_id': gameId
+        }, {
+          '$set' : {
+            winner: {equality:true},
+            history: newHistory,
+            stepNumber: history.length,
+           }
+        }, {new: true} )
+        .then( (game, err)=> {
+          if(err) console.log('error get game =>', err)
+          cb(game)
+          return
+        })
+      } else {
+        Game.findOneAndUpdate(
+        {
+          '_id': gameId
+        }, {
+          '$set' : {
+            history: newHistory,
+            stepNumber: history.length,
+           }
+        }, {new: true} )
+        .then( (game, err)=> {
+          if(err) console.log('error get game =>', err)
+          cb(game)
+          return
+        })
+
+      }
+
+
     }
   },
 
