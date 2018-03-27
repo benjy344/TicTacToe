@@ -56,8 +56,8 @@ module.exports = server => {
         handler: (req, cb) => {
           const payload = JSON.parse(req.payload)
           GameController.play(req, (updatedGame) => {
-            server.publish(`${Paths.game.play}/${payload.player1}`, updatedGame)
-            server.publish(`${Paths.game.play}/${payload.player2}`, updatedGame)
+            server.publish(`${Paths.game.play}/${payload.player1.id}`, updatedGame)
+            server.publish(`${Paths.game.play}/${payload.player2.id}`, updatedGame)
             return cb({ok:'ok'}).code(200)
           })
         }
@@ -70,10 +70,9 @@ module.exports = server => {
         auth: 'jwt',
         tags: ['api'],
         handler: (req, cb) => {
-          console.log(req.payload)
           const payload = JSON.parse(req.payload)
           GameController.playIa(req, (updatedGame) => {
-            server.publish(`${Paths.game.play}/${payload.player1}`, updatedGame)
+            server.publish(`${Paths.game.play}/${payload.player1.id}`, updatedGame)
             cb({updatedGame:'updatedGame'}).code(200)
           })
         }

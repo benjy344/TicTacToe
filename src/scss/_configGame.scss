@@ -1,0 +1,299 @@
+.game {
+  width:100%;
+  margin: auto;
+  max-width:525px;
+  position:relative;
+  padding: 40px 0;
+  background: url('../img/bg.jpg') no-repeat center;
+  background-size: cover;
+  box-shadow:0 12px 15px 0 rgba(0,0,0,.24),0 17px 50px 0 rgba(0,0,0,.19);
+
+
+  h2 {
+    text-align: center;
+    color: white;
+    text-transform: uppercase;
+    font-weight: 100;
+    margin-bottom: 40px;
+    font-size: 1.1rem;
+  }
+
+  .formGroup {
+    background: rgba(#242322, .4);
+    min-height: 146px;
+    padding: 20px 0;
+    display: block;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(#F4F4F4, .4);
+
+    &:last-child {
+      border-bottom: 1px solid rgba(#242322, .4);
+    }
+
+    h3 {
+      text-align: center;
+      color: white;
+      text-transform: uppercase;
+      font-weight: 100;
+      margin-bottom: 20px;
+      font-size: .825rem
+    }
+    .radio {
+      display: inline-block;
+      position: relative;
+      width: 50%;
+      text-align: center;
+      opacity: .5;
+
+      &.easy,
+      &.medium,
+      &.hard {
+        width: 33.33%;
+      }
+
+      & label {
+        background-color: transparent;
+        border: 1px solid #ccc;
+        border-radius: 50%;
+        cursor: pointer;
+        height: 28px;
+        left: 50%;
+        transform: translateX(-50%);
+        position: absolute;
+        top: 0;
+        width: 28px;
+      }
+      &.cross label {
+        border: none;
+      }
+
+      &.single label:after {
+        content: '1';
+        height: 6px;
+        left: 6px;
+        position: absolute;
+        top: 5px;
+        width: 12px;
+        color: white;
+        font-weight: 100;
+      }
+      &.multi label:after {
+        content: '2';
+        height: 6px;
+        left: 7px;
+        position: absolute;
+        top: 5px;
+        width: 12px;
+        color: white;
+        font-weight: 100;
+      }
+
+      &.easy {
+        &.checked label{
+          background: transparent !important;
+        }
+        & label:after {
+          content: '';
+          background: transparent;
+        }
+      }
+      &.cicle {
+        &.checked label{
+          background: transparent !important;
+        }
+      }
+      &.cross {
+        &.checked label{
+          background: transparent !important;
+        }
+        & label:after {
+          content: '';
+          height: 1px;
+          display: block;
+          position: absolute;
+          top: 50%;
+          transform: rotate(45deg);
+          width: 28px;
+          background: white;
+        }
+        & label:before {
+          content: '';
+          height: 1px;
+          display: block;
+          position: absolute;
+          top: 50%;
+          transform: rotate(-45deg);
+          width: 28px;
+          background: white;
+        }
+      }
+
+
+      &.medium {
+        &.checked label{
+          background: transparent !important;
+        }
+        & label:after {
+          content: '';
+          height: 14px;
+          width: 28px;
+          border-bottom-left-radius: 28px;
+          border-bottom-right-radius: 28px;
+          left: -1px;
+          position: absolute;
+          bottom: -1px;
+          background: white;
+        }
+      }
+
+      &.hard {
+        &.checked label{
+          background: transparent !important;
+        }
+        & label:after {
+          content: '';
+          height: 100%;
+          left: 0;
+          position: absolute;
+          top: 0;
+          width: 100%;
+          background: white;
+          border-radius: 100%;
+        }
+
+      }
+
+      & span {
+        display: block;
+        margin-top: 30px;
+        color: #fff;
+        font-weight: 100;
+        cursor: pointer;
+      }
+
+
+      & input[type="radio"] {
+        visibility: hidden;
+      }
+
+      &.checked {
+        opacity: 1;
+      }
+
+      &.checked label {
+        background-color: #FFF;
+        border-color: #FFF;
+      }
+
+      &.checked label:after {
+        opacity: 1;
+        color: #242322;
+      }
+    }
+  }
+
+  .loadSaloon {
+    margin: 40px auto 0;
+    display: block;
+    padding: 15px 20px;
+    width: 200px;
+    border-radius: 200px;
+    text-transform: uppercase;
+    background: #2196f3;
+    border: 1px solid #2196f3;
+    cursor: pointer;
+    color: white;
+  }
+  .playButton {
+    margin: 40px auto 0;
+    display: block;
+    padding: 15px 20px;
+    width: 200px;
+    border-radius: 200px;
+    text-transform: uppercase;
+    background: #40ec61;
+    border: 1px solid #40ec61;
+    cursor: pointer;
+    &[disabled] {
+      background: transparent;
+      border: 1px solid white;
+      color: white;
+      opacity: .5;
+      cursor: not-allowed;
+    }
+  }
+
+  @keyframes loading {
+    0% {
+      transform-origin: 100% 100%;
+      transform: rotate(0deg);
+    }
+    100% {
+      transform-origin: 100% 100%;
+      transform: rotate(360deg);
+    }
+  }
+
+  .loading {
+    display:block;
+    margin-top: 15px;
+    #load {
+      width: 75px;
+      animation: loading 3s linear infinite;
+      position: absolute;
+      left: 42%;
+
+      #loading-inner {
+        stroke: {
+          dashoffset: 0;
+          dasharray: 150;
+          width: 5;
+          miterlimit: 10;
+          linecap: round;
+        }
+        animation: loading-circle 2s linear infinite;
+        stroke: white;
+        fill: transparent;
+      }
+
+    }
+
+    @keyframes loading {
+      0% {
+        transform: rotate(0);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    @keyframes loading-circle {
+      0% {
+        stroke-dashoffset: 0
+      }
+      100% {
+        stroke-dashoffset: -300;
+      }
+    }
+  }
+  .players {
+    button {
+      display: inline-block;
+      width: 50%;
+      text-align: center;
+      height: 40px;
+      border: none;
+      background: transparent;
+      color: white;
+
+      &.selected {
+        background: rgba(#F3F3F3, .9);
+        color: #242322;
+      }
+
+      &:hover {
+        background: rgba(#F3F3F3, .6);
+        color: #242322;
+      }
+    }
+  }
+}

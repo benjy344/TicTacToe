@@ -7,8 +7,9 @@ class SelectPlayer extends Component {
   }
 
   render () {
+    console.log(this.props.selected)
     return(
-      <button onClick={this.select.bind(this, this.props.player)} >
+      <button onClick={this.select.bind(this, this.props.player)} className={(this.props.selected === this.props.player.id?'selected':'')}>
         {this.props.player.pseudo}
       </button>
     )

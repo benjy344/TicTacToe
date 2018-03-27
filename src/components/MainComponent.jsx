@@ -35,6 +35,7 @@ class MainComponent extends Component {
       const handler = (update, flags) => {
         if(update._id){
           Store.dispatch(createGameSuccess(update))
+
           this.setState({
             startGame: true
           })
@@ -89,7 +90,9 @@ class MainComponent extends Component {
 
   render() {
     return (
-      <div>
+      <div className="game">
+        {(this.state.startGame || this.state.playIaGame) &&
+          <button className='goBack' onClick={this.goBack.bind(this)}>Configuration</button>}
         {(!this.state.startGame && !this.state.playIaGame) &&
         <ConfigGame
           changeSingle={this.changeSingle.bind(this)}
@@ -106,8 +109,7 @@ class MainComponent extends Component {
           <Game />}
         {this.state.playIaGame &&
           <IaGame />}
-        {(this.state.startGame || this.state.playIaGame) &&
-          <button onClick={this.goBack.bind(this)}>Retour</button>}
+
       </div>
 
     )

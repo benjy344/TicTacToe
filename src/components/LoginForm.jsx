@@ -8,6 +8,7 @@ class LoginForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      visibleForm: 'si',
       credentials: {user: '', password: ''},
       newCredentials: {username: '', password: '', email:''}
     }
@@ -47,25 +48,57 @@ class LoginForm extends Component {
     }
   }
 
+  changeForm(form) {
+    this.setState({
+      visibleForm: form
+    })
+  }
+
   render() {
     return (
-      <div>
-        <form>
-          <div className="form-group">
-          <input name="user" type="text" value={this.state.credentials.user} placeholder="Username" onChange={this.onChange.bind(this)} />
-          <input name="password" type="password" value={this.state.credentials.password} placeholder="Password" onChange={this.onChange.bind(this)} />
+      <div className="login-wrap">
+        <div className="login-html">
+          <button className={"sign-in "+(this.state.visibleForm === 'si'?'active':'')} onClick={this.changeForm.bind(this, 'si')} >Sign In</button>
+          <button className={"sign-up "+(this.state.visibleForm === 'su'?'active':'')} onClick={this.changeForm.bind(this, 'su')} >Sign Up</button>
+          <div className="login-form">
+            {this.state.visibleForm === 'si' &&
+            <div className="sign-in-htm">
+              <div className="group">
+                <label htmlFor="user" className="label">Username</label>
+                <input className="input" name="user" type="text" value={this.state.credentials.user} placeholder="Username" onChange={this.onChange.bind(this)} />
+              </div>
+              <div className="group">
+                <label htmlFor="password" className="label">Password</label>
+                <input className="input" name="password" type="password" value={this.state.credentials.password} placeholder="Password" onChange={this.onChange.bind(this)} />
+              </div>
+              <div className="group">
+                <button type="Sign in" onClick={this.onSave.bind(this)}>Submit</button>
+              </div>
+            </div>}
+
+            {this.state.visibleForm === 'su' &&
+            <div className="sign-up-htm">
+              <div className="group">
+                <label htmlFor="username" className="label">Username</label>
+                <input className="input" name="username" type="text" value={this.state.newCredentials.username} placeholder="Username" onChange={this.onChangeNew.bind(this)} />
+              </div>
+              <div className="group">
+                <label htmlFor="pass" className="label">Password</label>
+                <input className="input" name="password" type="password" value={this.state.newCredentials.password} placeholder="Password" onChange={this.onChangeNew.bind(this)} />
+              </div>
+              <div className="group">
+                <label htmlFor="pass" className="label">Email Address</label>
+                <input className="input" name="email" type="email" value={this.state.newCredentials.email} placeholder="Email" onChange={this.onChangeNew.bind(this)} />
+              </div>
+              <div className="group">
+                <button type="submit" onClick={this.onSaveNew.bind(this)}>Submit</button>
+              </div>
+              <div className="foot-lnk">
+                <button onClick={this.changeForm.bind(this, 'si')}>Already Member?</button>
+              </div>
+            </div>}
           </div>
-          <button type="submit" onClick={this.onSave.bind(this)}>Submit</button>
-          {this.errorMessage()}
-        </form>
-        <form>
-          <div className="form-group">
-          <input name="username" type="text" value={this.state.newCredentials.username} placeholder="Username" onChange={this.onChangeNew.bind(this)} />
-          <input name="email" type="email" value={this.state.newCredentials.email} placeholder="Email" onChange={this.onChangeNew.bind(this)} />
-          <input name="password" type="password" value={this.state.newCredentials.password} placeholder="Password" onChange={this.onChangeNew.bind(this)} />
-          </div>
-          <button type="submit" onClick={this.onSaveNew.bind(this)}>Submit</button>
-        </form>
+        </div>
       </div>
     )
 

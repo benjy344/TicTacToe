@@ -20,6 +20,7 @@
     "mongoose": "^5.0.10",
     "nes": "^6.4.3",
     "node-fetch": "^1.7.3",
+    "node-sass-chokidar": "^1.2.2",
     "npm-run-all": "^4.1.2",
     "path": "^0.12.7",
     "pg": "^7.3.0",
@@ -37,6 +38,8 @@
     "vision": "^4.1.1"
   },
   "scripts": {
+    "build-css": "node-sass-chokidar src/scss -o src/scss",
+    "watch-css": "npm run build-css && node-sass-chokidar src/scss -o public/css --watch --recursive",
     "start": "npm-run-all --parallel server:start client:start",
     "client:start": "react-scripts start",
     "server:start": "nodemon index.js --exec babel-node --presets es2015"

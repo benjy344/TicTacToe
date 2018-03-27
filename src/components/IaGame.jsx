@@ -44,11 +44,10 @@ class IaGame extends Component {
         if(err) console.log(err)
       })
     })
-
     const ia                = new IA(this.props.level)
     ia.currentState         = new iaState()
     ia.currentState.squares = Array(9).fill(null)
-    ia.currentState.turn    = "X"
+    ia.currentState.turn    = (this.props.player==='cross'?"X":"O")
 
     this.setState({
       ia
@@ -57,22 +56,22 @@ class IaGame extends Component {
   }
 
   handleClick(i) {
+
     if( this.props.game.winner ) return
     const history = this.props.game.history.slice(0, this.props.game.stepNumber + 1)
     const current = history[history.length - 1]
     const squares = current.squares.slice()
-
     if(squares[i]) return
 
-    squares[i] = "X"
+    squares[i] = (this.props.player==='cross'?"X":"O")
     let iaClick = null
     if(history.length < 5){
       const next = new iaState(this.state.ia.currentState)
-      next.squares[i] = "X"
+      next.squares[i] = (this.props.player==='cross'?"X":"O")
       next.advanceTurn()
       this.state.ia.advanceTo(next)
-      iaClick = this.state.ia.notify('O', squares)
-      if(iaClick != null) squares[iaClick] = "O"
+      iaClick = this.state.ia.notify((this.props.player==='cross'?"O":"X"), squares)
+      if(iaClick != null) squares[iaClick] = (this.props.player==='cross'?"O":"X")
     }
 
     const config = {
@@ -80,7 +79,8 @@ class IaGame extends Component {
       headers: { Authorization: 'Bearer ' + localStorage.getItem('id_token') },
       body: JSON.stringify({
         gameId: this.props.game.id,
-        player1: this.props.game.player1,
+        player1: jwt.verify(localStorage.getItem('id_token'), 'patate'),
+        shape: (this.props.player==='cross'?"X":"O"),
         history,
         current,
         squares,
@@ -105,35 +105,36 @@ class IaGame extends Component {
     const current = history[this.props.game.stepNumber]
     const winner  = this.props.game.winner
 
+    console.log(current)
+
     let status
     if (winner) {
       if(winner.equality) {
         status = "Equality"
       } else {
-        status = "Winner: " + winner
+
+        status = (winner.pseudo==="ia"?'You lose':'You win')
       }
 
     } else {
       if(history.length === 10) {
         status = "Egality"
       } else {
-        status = "Next player: " + (this.props.game.xIsNext ? "X" : "O")
+        status = ""
       }
     }
 
 
     return (
-      <div className="game">
-        <div>
-          <div className="game-board">
-            <Board
-              squares={current.squares}
-              onClick={i => this.handleClick(i)}
-            />
-          </div>
-          <div className="game-info">
-            <div>{status}</div>
-          </div>
+      <div className="gameContainer" >
+        <div className={"game-board "+ (winner&&winner.line?'winnerLine'+winner.line:'')} >
+          <Board
+            squares={current.squares}
+            onClick={i => this.handleClick(i)}
+          />
+        </div>
+        <div className="game-info">
+          <div className="status">{status}</div>
         </div>
       </div>
     )

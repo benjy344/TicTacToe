@@ -20,7 +20,7 @@ class ConfigGame extends Component {
   renderChooseStep2() {
     if(this.props.singlePlayer) {
       return(
-        <div>
+        <div >
           <ChoiceLevel
             level={this.props.level}
             player={this.props.player}
@@ -44,33 +44,32 @@ class ConfigGame extends Component {
   render() {
     return(
       <div>
-        <h2>config</h2>
-        <div>
-          <div className="radio">
-            <label>
-              <input
-                type="radio"
-                value="single"
-                checked={this.props.singlePlayer}
-                onChange={this.changeSingle.bind(this, true)}
-              />
-              Single Player
-            </label>
+        <h2>Configuration</h2>
+        <div className="formGroup">
+          <h3>Number of player</h3>
+          <div className={"radio single " +(this.props.singlePlayer?'checked':'')}>
+            <input
+              type="radio"
+              value="single"
+              checked={this.props.singlePlayer}
+              onChange={this.changeSingle.bind(this, true)}
+            />
+            <label onClick={this.changeSingle.bind(this, true)} htmlFor="single" ></label>
+            <span onClick={this.changeSingle.bind(this, true)}>Single Player</span>
           </div>
-          <div className="radio">
-            <label>
-              <input
-                type="radio"
-                value="multi"
-                checked={!this.props.singlePlayer}
-                onChange={this.changeSingle.bind(this, false)}
-              />
-              Multiplayer
-            </label>
+          <div className={"radio multi " +(!this.props.singlePlayer?'checked':'')}>
+            <input
+              type="radio"
+              value="multi"
+              checked={!this.props.singlePlayer}
+              onChange={this.changeSingle.bind(this, false)}
+            />
+            <label onClick={this.changeSingle.bind(this, false)} htmlFor="multi"></label>
+            <span onClick={this.changeSingle.bind(this, false)} >Multiplayer</span>
           </div>
         </div>
         {this.renderChooseStep2()}
-        <button onClick={this.play.bind(this)} disabled={!this.props.singlePlayer && this.props.player2 === null} >Play</button>
+        <button className="playButton" onClick={this.play.bind(this)} disabled={!this.props.singlePlayer && this.props.player2 === null} >Play</button>
       </div>
 
     )

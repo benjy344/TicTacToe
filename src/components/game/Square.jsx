@@ -5,9 +5,7 @@ class Square extends Component {
 
   render() {
     return (
-      <button className="square" onClick={this.props.onClick}>
-        {this.props.value}
-      </button>
+      <button className={"square class"+this.props.value} onClick={this.props.onClick}></button>
     )
   }
 

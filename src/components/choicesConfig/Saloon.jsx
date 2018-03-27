@@ -13,7 +13,8 @@ class Saloon extends Component {
     this.state = {
       loading: false,
       player: jwt.verify(localStorage.getItem('id_token'), 'patate'),
-      players: []
+      players: [],
+      selectedPlayer: null
     }
   }
 
@@ -53,34 +54,40 @@ class Saloon extends Component {
         client.request('wait', (err, data, statusCode) => {
           if(err) console.log(err)
         })
-        //client.subscribe('/wait', handler)
     })
   }
 
   selectPlayer(player2) {
+    this.setState({
+      selectedPlayer:player2.id
+    })
     Store.dispatch(addPlayer(player2))
   }
 
   renderLoading() {
     if(this.state.loading && this.state.players.length === 0) {
-      return(<span>Loading</span>)
+      return(<span className="loading">
+          <svg id="load" x="0px" y="0px" viewBox="0 0 75 75">
+          <circle id="loading-inner" cx="37" cy="37" r="30"/>
+          </svg>
+        </span>)
     } else if (this.state.players.length > 0) {
       return(
-        <ul>
+        <div className="players">
         {this.state.players.map((data, index) => (
-          <SelectPlayer  key={index} id={index} player={data} selectPlayer={this.selectPlayer.bind(this)}/>
+          <SelectPlayer key={index} id={index} player={data} selectPlayer={this.selectPlayer.bind(this)} selected={this.state.selectedPlayer} />
         ))}
-        </ul>
+        </div>
 
       )
     } else {
-      return(<button onClick={this.loadSaloon.bind(this)} >Loading Players</button>)
+      return(<button className="loadSaloon" onClick={this.loadSaloon.bind(this)} >Loading Players</button>)
     }
   }
 
   render() {
     return(
-      <div>
+      <div className="formGroup" >
         { this.renderLoading() }
 
         {this.render.player}

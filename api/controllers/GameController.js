@@ -89,13 +89,15 @@ const GameController = {
     if (calculateWinner) {
       // set the winner
       //return
+      let winner = (calculateWinner.winner==="X"?player1:player2)
 
+      winner.line = calculateWinner.line+1
       Game.findOneAndUpdate(
         {
           '_id': gameId
         }, {
           '$set' : {
-            winner: (calculateWinner==="X"?player1:player2),
+            winner: winner,
             history: newHistory,
             stepNumber: history.length,
             xIsNext: !xIsNext
@@ -152,14 +154,15 @@ const GameController = {
     const payload = JSON.parse(req.payload)
     const gameId  = payload.gameId
     const player1 = payload.player1
+    const shape   = payload.shape
     const history = payload.history
     const current = payload.current
     const squares = payload.squares
     const click   = payload.click
     const clickIa = payload.clickIa
 
-    squares[click] = "X"
-    if(clickIa) squares[clickIa] = "O"
+    squares[click] = shape
+    if(clickIa) squares[clickIa] = (shape==='X'?"O":"X")
 
     const newHistory = history.concat(
       [
@@ -169,16 +172,22 @@ const GameController = {
       ])
 
     const calculateWinner = GameController.calculateWinner(squares)
-
     if (calculateWinner) {
       // set the winner
       //return
+      let winner
+      if ( (calculateWinner.winner === "X" && shape === 'X') || (calculateWinner.winner === "O" && shape === 'O') ) {
+        winner = player1
+        winner.line = calculateWinner.line+1
+      } else if ( (calculateWinner.winner === "X" && shape === 'O') || (calculateWinner.winner==="O" && shape==='X') ) {
+        winner = {pseudo:'ia', line:calculateWinner.line+1}
+      }
       Game.findOneAndUpdate(
         {
           '_id': gameId
         }, {
           '$set' : {
-            winner: (calculateWinner==="X"?player1:{pseudo:'ia'}),
+            winner: winner,
             history: newHistory,
             stepNumber: history.length
            }
@@ -242,7 +251,7 @@ const GameController = {
     for (let i = 0; i < lines.length; i++) {
       const [a, b, c] = lines[i]
       if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return squares[a]
+        return {winner:squares[a], line: i}
       }
     }
     return null

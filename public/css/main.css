@@ -1,0 +1,575 @@
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline; }
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+  display: block; }
+
+body {
+  line-height: 1; }
+
+ol, ul {
+  list-style: none; }
+
+blockquote, q {
+  quotes: none; }
+
+blockquote:before, blockquote:after {
+  content: '';
+  content: none; }
+
+q:before, q:after {
+  content: '';
+  content: none; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+* {
+  outline: none; }
+
+body {
+  padding-top: 5%;
+  height: 100vh;
+  color: #6a6f8c;
+  background: url("../img/bg.jpg") no-repeat center;
+  background-size: cover;
+  font: 600 16px/18px 'Open Sans',sans-serif; }
+
+*, :after, :before {
+  box-sizing: border-box; }
+
+.clearfix:after, .clearfix:before {
+  content: '';
+  display: table; }
+
+.clearfix:after {
+  clear: both;
+  display: block; }
+
+a {
+  color: inherit;
+  text-decoration: none; }
+
+#app {
+  min-height: 100%; }
+
+.login-wrap {
+  width: 100%;
+  margin: auto;
+  max-width: 525px;
+  min-height: 670px;
+  position: relative;
+  background: url("../img/bg.jpg") no-repeat center;
+  background-size: cover;
+  box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19); }
+
+.login-html {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  padding: 90px 70px 50px 70px;
+  background: rgba(36, 35, 34, 0.5); }
+
+.login-html .sign-in-htm,
+.login-html .sign-up-htm {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  transition: all .4s linear; }
+
+.login-html .tab,
+.login-form .group .label,
+.login-form .group .button {
+  text-transform: uppercase; }
+
+.login-html .tab {
+  font-size: 22px;
+  margin-right: 15px;
+  padding-bottom: 5px;
+  margin: 0 15px 10px 0;
+  display: inline-block;
+  border-bottom: 2px solid transparent; }
+
+.login-html .sign-in + .tab,
+.login-html .sign-up + .tab {
+  color: #fff;
+  border-color: #1161ee; }
+
+.login-form {
+  min-height: 345px;
+  position: relative;
+  margin: 20px 0; }
+
+.login-form .group {
+  margin: 30px 0; }
+
+.login-form .group .label,
+.login-form .group .input,
+.login-form .group .button {
+  width: 100%;
+  color: #fff;
+  display: block; }
+
+.sign-up, .sign-in {
+  padding-left: 12px;
+  font-size: 22px;
+  text-transform: uppercase;
+  padding-bottom: 5px;
+  letter-spacing: 2px;
+  display: inline-block;
+  font-weight: 100;
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer; }
+  .sign-up.active, .sign-in.active {
+    border-bottom: 2px solid #40ec61; }
+
+.sign-in {
+  padding-left: 0px; }
+
+.login-form .group .input,
+.login-form .group .button {
+  border: none;
+  padding: 15px 20px;
+  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.1); }
+
+.login-form .group input[data-type="password"] {
+  text-security: circle;
+  -webkit-text-security: circle; }
+
+.login-form .group .label {
+  color: #aaa;
+  font-size: 12px;
+  font-weight: 100;
+  padding-left: 20px;
+  margin-bottom: 10px; }
+
+.group button {
+  border: none;
+  padding: 15px 20px;
+  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.1);
+  background: #40ec61;
+  float: right;
+  min-width: 90px;
+  text-transform: uppercase;
+  cursor: pointer; }
+
+.foot-lnk {
+  float: left;
+  padding-left: 20px;
+  line-height: 45px;
+  cursor: pointer; }
+  .foot-lnk button {
+    cursor: pointer;
+    background: transparent;
+    text-transform: uppercase;
+    color: white;
+    border: none;
+    font-weight: 100; }
+
+.logoutButton {
+  height: 40px;
+  width: 40px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: fixed;
+  right: 30px;
+  top: 30px;
+  padding: 0; }
+  .logoutButton .whitesvg {
+    fill: #FFFFFF; }
+
+.game {
+  width: 100%;
+  margin: auto;
+  max-width: 525px;
+  position: relative;
+  padding: 40px 0;
+  background: url("../img/bg.jpg") no-repeat center;
+  background-size: cover;
+  box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19); }
+  .game h2 {
+    text-align: center;
+    color: white;
+    text-transform: uppercase;
+    font-weight: 100;
+    margin-bottom: 40px;
+    font-size: 1.1rem; }
+  .game .formGroup {
+    background: rgba(36, 35, 34, 0.4);
+    min-height: 146px;
+    padding: 20px 0;
+    display: block;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(244, 244, 244, 0.4); }
+    .game .formGroup:last-child {
+      border-bottom: 1px solid rgba(36, 35, 34, 0.4); }
+    .game .formGroup h3 {
+      text-align: center;
+      color: white;
+      text-transform: uppercase;
+      font-weight: 100;
+      margin-bottom: 20px;
+      font-size: .825rem; }
+    .game .formGroup .radio {
+      display: inline-block;
+      position: relative;
+      width: 50%;
+      text-align: center;
+      opacity: .5; }
+      .game .formGroup .radio.easy, .game .formGroup .radio.medium, .game .formGroup .radio.hard {
+        width: 33.33%; }
+      .game .formGroup .radio label {
+        background-color: transparent;
+        border: 1px solid #ccc;
+        border-radius: 50%;
+        cursor: pointer;
+        height: 28px;
+        left: 50%;
+        transform: translateX(-50%);
+        position: absolute;
+        top: 0;
+        width: 28px; }
+      .game .formGroup .radio.cross label {
+        border: none; }
+      .game .formGroup .radio.single label:after {
+        content: '1';
+        height: 6px;
+        left: 6px;
+        position: absolute;
+        top: 5px;
+        width: 12px;
+        color: white;
+        font-weight: 100; }
+      .game .formGroup .radio.multi label:after {
+        content: '2';
+        height: 6px;
+        left: 7px;
+        position: absolute;
+        top: 5px;
+        width: 12px;
+        color: white;
+        font-weight: 100; }
+      .game .formGroup .radio.easy.checked label {
+        background: transparent !important; }
+      .game .formGroup .radio.easy label:after {
+        content: '';
+        background: transparent; }
+      .game .formGroup .radio.cicle.checked label {
+        background: transparent !important; }
+      .game .formGroup .radio.cross.checked label {
+        background: transparent !important; }
+      .game .formGroup .radio.cross label:after {
+        content: '';
+        height: 1px;
+        display: block;
+        position: absolute;
+        top: 50%;
+        transform: rotate(45deg);
+        width: 28px;
+        background: white; }
+      .game .formGroup .radio.cross label:before {
+        content: '';
+        height: 1px;
+        display: block;
+        position: absolute;
+        top: 50%;
+        transform: rotate(-45deg);
+        width: 28px;
+        background: white; }
+      .game .formGroup .radio.medium.checked label {
+        background: transparent !important; }
+      .game .formGroup .radio.medium label:after {
+        content: '';
+        height: 14px;
+        width: 28px;
+        border-bottom-left-radius: 28px;
+        border-bottom-right-radius: 28px;
+        left: -1px;
+        position: absolute;
+        bottom: -1px;
+        background: white; }
+      .game .formGroup .radio.hard.checked label {
+        background: transparent !important; }
+      .game .formGroup .radio.hard label:after {
+        content: '';
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        background: white;
+        border-radius: 100%; }
+      .game .formGroup .radio span {
+        display: block;
+        margin-top: 30px;
+        color: #fff;
+        font-weight: 100;
+        cursor: pointer; }
+      .game .formGroup .radio input[type="radio"] {
+        visibility: hidden; }
+      .game .formGroup .radio.checked {
+        opacity: 1; }
+      .game .formGroup .radio.checked label {
+        background-color: #FFF;
+        border-color: #FFF; }
+      .game .formGroup .radio.checked label:after {
+        opacity: 1;
+        color: #242322; }
+  .game .loadSaloon {
+    margin: 40px auto 0;
+    display: block;
+    padding: 15px 20px;
+    width: 200px;
+    border-radius: 200px;
+    text-transform: uppercase;
+    background: #2196f3;
+    border: 1px solid #2196f3;
+    cursor: pointer;
+    color: white; }
+  .game .playButton {
+    margin: 40px auto 0;
+    display: block;
+    padding: 15px 20px;
+    width: 200px;
+    border-radius: 200px;
+    text-transform: uppercase;
+    background: #40ec61;
+    border: 1px solid #40ec61;
+    cursor: pointer; }
+    .game .playButton[disabled] {
+      background: transparent;
+      border: 1px solid white;
+      color: white;
+      opacity: .5;
+      cursor: not-allowed; }
+
+@keyframes loading {
+  0% {
+    transform-origin: 100% 100%;
+    transform: rotate(0deg); }
+  100% {
+    transform-origin: 100% 100%;
+    transform: rotate(360deg); } }
+  .game .loading {
+    display: block;
+    margin-top: 15px; }
+    .game .loading #load {
+      width: 75px;
+      animation: loading 3s linear infinite;
+      position: absolute;
+      left: 42%; }
+      .game .loading #load #loading-inner {
+        stroke-dashoffset: 0;
+        stroke-dasharray: 150;
+        stroke-width: 5;
+        stroke-miterlimit: 10;
+        stroke-linecap: round;
+        animation: loading-circle 2s linear infinite;
+        stroke: white;
+        fill: transparent; }
+
+@keyframes loading {
+  0% {
+    transform: rotate(0); }
+  100% {
+    transform: rotate(360deg); } }
+
+@keyframes loading-circle {
+  0% {
+    stroke-dashoffset: 0; }
+  100% {
+    stroke-dashoffset: -300; } }
+  .game .players button {
+    display: inline-block;
+    width: 50%;
+    text-align: center;
+    height: 40px;
+    border: none;
+    background: transparent;
+    color: white; }
+    .game .players button.selected {
+      background: rgba(243, 243, 243, 0.9);
+      color: #242322; }
+    .game .players button:hover {
+      background: rgba(243, 243, 243, 0.6);
+      color: #242322; }
+
+.goBack {
+  background: transparent;
+  text-transform: uppercase;
+  color: white;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  margin: 0 0 40px 30px; }
+  .goBack:before {
+    content: '';
+    border: 1px solid white;
+    border-bottom: 0;
+    border-right: 0;
+    height: 15px;
+    width: 15px;
+    transform: translate(-25%, -50%) rotate(-45deg);
+    display: block;
+    left: -12px;
+    position: absolute;
+    top: 50%; }
+
+.gameContainer {
+  position: relative;
+  margin-bottom: 60px; }
+
+.game-info {
+  position: absolute;
+  color: white;
+  font-weight: 100;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  text-transform: uppercase;
+  line-height: 3rem; }
+  .game-info.top {
+    top: -25px;
+    font-size: 1rem; }
+
+.game-board {
+  text-align: center;
+  position: relative; }
+  .game-board.winnerLine1:after {
+    content: "";
+    height: 1px;
+    background: white;
+    width: 300px;
+    display: block;
+    left: 112.5px;
+    top: 51px;
+    position: absolute; }
+  .game-board.winnerLine2:after {
+    content: "";
+    height: 1px;
+    background: white;
+    width: 304px;
+    display: block;
+    left: 112.5px;
+    top: 153px;
+    position: absolute; }
+  .game-board.winnerLine3:after {
+    content: "";
+    height: 1px;
+    background: white;
+    width: 304px;
+    display: block;
+    left: 112.5px;
+    top: 255px;
+    position: absolute; }
+  .game-board.winnerLine4:after {
+    content: "";
+    width: 1px;
+    background: white;
+    height: 304px;
+    display: block;
+    top: 0;
+    left: 160.5px;
+    position: absolute; }
+  .game-board.winnerLine5:after {
+    content: "";
+    width: 1px;
+    background: white;
+    height: 304px;
+    display: block;
+    top: 0;
+    left: 262.5px;
+    position: absolute; }
+  .game-board.winnerLine6:after {
+    content: "";
+    width: 1px;
+    background: white;
+    height: 304px;
+    display: block;
+    top: 0;
+    left: 365.5px;
+    position: absolute; }
+  .game-board.winnerLine7:after {
+    content: "";
+    height: 1px;
+    background: white;
+    width: 430px;
+    display: block;
+    left: 112.5px;
+    top: 0;
+    position: absolute;
+    transform: rotate(45deg);
+    transform-origin: 0; }
+  .game-board.winnerLine8:after {
+    content: "";
+    height: 1px;
+    background: white;
+    width: 430px;
+    display: block;
+    left: 112.5px;
+    bottom: 0;
+    position: absolute;
+    transform: rotate(-45deg);
+    transform-origin: 0; }
+  .game-board .square {
+    height: 100px;
+    width: 100px;
+    background: rgba(244, 244, 244, 0.1);
+    transition: all .3s ease-in;
+    border: none;
+    cursor: pointer;
+    margin: 1px;
+    vertical-align: top; }
+    .game-board .square.classX {
+      position: relative; }
+      .game-board .square.classX:before {
+        content: '';
+        height: 1px;
+        display: block;
+        position: absolute;
+        top: 50%;
+        transform: rotate(45deg);
+        width: 90px;
+        background: white; }
+      .game-board .square.classX:after {
+        content: '';
+        height: 1px;
+        display: block;
+        position: absolute;
+        top: 50%;
+        transform: rotate(-45deg);
+        width: 90px;
+        background: white; }
+    .game-board .square.classO {
+      position: relative; }
+      .game-board .square.classO:before {
+        content: '';
+        height: 65px;
+        display: block;
+        border-radius: 200px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 65px;
+        background: transparent;
+        border: 1px solid white; }
+    .game-board .square:hover {
+      background: rgba(244, 244, 244, 0.3);
+      transition: all .3s ease-in; }

@@ -74,8 +74,8 @@ class Game extends Component {
       headers: { Authorization: 'Bearer ' + localStorage.getItem('id_token') },
       body: JSON.stringify({
         gameId: this.props.game.id,
-        player1: this.props.game.player1,
-        player2: this.props.game.player2,
+        player1: jwt.verify(localStorage.getItem('id_token'), 'patate'),
+        player2: this.props.player2,
         history,
         current,
         squares,
@@ -140,18 +140,23 @@ class Game extends Component {
 
 
     return (
-      <div className="game">
+      <div className="gameContainer">
         {this.state.loading &&
-          <p>loading</p>}
+          <span className="loading">
+            <svg id="load" x="0px" y="0px" viewBox="0 0 75 75">
+            <circle id="loading-inner" cx="37" cy="37" r="30"/>
+            </svg>
+          </span>
+        }
         {!this.state.loading &&
         <div>
-          <div className="game-board">
+          <div className={"game-board "+ (winner&&winner.line?'winnerLine'+winner.line:'')}>
             <Board
               squares={current.squares}
               onClick={i => this.handleClick(i)}
             />
           </div>
-          <div className="game-info">
+          <div className={"game-info "+(status==='Is your turn'?'top':'')}>
             <div>{status}</div>
           </div>
         </div>

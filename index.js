@@ -27,6 +27,7 @@ server.register([
     {
         register: swaggered,
         options: {
+            auth: false,
             info: {
                 title: 'TIC TAC TOE',
                 description: 'API DOCUMENTATION',
@@ -37,14 +38,22 @@ server.register([
     {
         register: swaggeredUI,
         options: {
-            title: 'Tic Tac Toe API',
+            title: 'TIC TAC TOE API',
             path: '/docs',
+            auth: false,
+            authorization: {
+                field: 'apiKey',
+                valuePrefix: 'bearer ',
+                defaultValue: 'demoKey',
+                placeholder: 'Enter your apiKey here'
+            },
             swaggerOptions: {}
         }
     }
 ], {
     select: 'api'
-}, (err) => { if (err) { throw err } })
+}, err => { if (err) { throw err } })
+
 
 
 /* ##### PREPARE WEB-SOCKET ##### */

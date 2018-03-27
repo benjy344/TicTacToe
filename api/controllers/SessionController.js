@@ -1,11 +1,7 @@
-//import Mongoose from 'mongoose'
-//import User          from '../../models/userModel.js'
 import UserController from '../controllers/UserController.js'
 import _              from 'lodash'
 import jwt            from 'jsonwebtoken'
 import bcrypt         from 'bcrypt'
-
-
 
 function getUserScheme(payload) {
 

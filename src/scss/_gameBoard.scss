@@ -1,0 +1,213 @@
+.goBack {
+  background: transparent;
+  text-transform: uppercase;
+  color: white;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  margin: 0 0 40px 30px;
+
+  &:before {
+    content: '';
+    border: 1px solid white;
+    border-bottom: 0;
+    border-right: 0;
+    height: 15px;
+    width: 15px;
+    transform: translate(-25%, -50%) rotate(-45deg);
+    display: block;
+    left: -12px;
+    position: absolute;
+    top: 50%;
+  }
+}
+.gameContainer {
+  position: relative;
+  margin-bottom: 60px;
+}
+.game-info {
+  position: absolute;
+  color: white;
+  font-weight:100;
+  text-align:center;
+  top: 50%;
+  left:50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  text-transform: uppercase;
+  line-height: 3rem;
+
+  &.top {
+    top: -25px;
+    font-size: 1rem;  }
+}
+.game-board {
+  text-align: center;
+  position: relative;
+
+  &.winnerLine1 {
+    &:after {
+      content: "";
+      height: 1px;
+      background: white;
+      width:300px;
+      display:block;
+      left:112.5px;
+      top: 51px;
+      position: absolute;
+    }
+
+  }
+  &.winnerLine2 {
+    &:after {
+      content: "";
+      height: 1px;
+      background: white;
+      width:304px;
+      display:block;
+      left:112.5px;
+      top: 153px;
+      position: absolute;
+    }
+
+  }
+  &.winnerLine3 {
+    &:after {
+      content: "";
+      height: 1px;
+      background: white;
+      width:304px;
+      display:block;
+      left:112.5px;
+      top: 255px;
+      position: absolute;
+    }
+
+  }
+  &.winnerLine4 {
+    &:after {
+      content: "";
+      width: 1px;
+      background: white;
+      height:304px;
+      display:block;
+      top: 0;
+      left:160.5px;
+      position: absolute;
+    }
+
+  }
+  &.winnerLine5 {
+    &:after {
+      content: "";
+      width: 1px;
+      background: white;
+      height:304px;
+      display:block;
+      top: 0;
+      left:262.5px;
+      position: absolute;
+    }
+
+  }
+  &.winnerLine6 {
+    &:after {
+      content: "";
+      width: 1px;
+      background: white;
+      height:304px;
+      display:block;
+      top: 0;
+      left: 365.5px;
+      position: absolute;
+    }
+
+  }
+  &.winnerLine7 {
+    &:after {
+      content: "";
+      height: 1px;
+      background: white;
+      width: 430px;
+      display: block;
+      left: 112.5px;
+      top: 0;
+      position: absolute;
+      transform: rotate(45deg);
+      transform-origin: 0;
+    }
+
+  }
+  &.winnerLine8 {
+    &:after {
+      content: "";
+      height: 1px;
+      background: white;
+      width: 430px;
+      display: block;
+      left: 112.5px;
+      bottom: 0;
+      position: absolute;
+      transform: rotate(-45deg);
+      transform-origin: 0;
+    }
+
+  }
+
+  .square {
+    height: 100px;
+    width: 100px;
+    background: rgba(#F4F4F4, .1);
+    transition: all .3s ease-in;
+    border: none;
+    cursor: pointer;
+    margin: 1px;
+    vertical-align: top;
+
+    &.classX {
+      position: relative;
+      &:before {
+        content: '';
+        height: 1px;
+        display: block;
+        position: absolute;
+        top: 50%;
+        transform: rotate(45deg);
+        width: 90px;
+        background: white;
+      }
+      &:after {
+        content: '';
+        height: 1px;
+        display: block;
+        position: absolute;
+        top: 50%;
+        transform: rotate(-45deg);
+        width: 90px;
+        background: white;
+      }
+    }
+    &.classO {
+      position: relative;
+      &:before {
+        content: '';
+        height: 65px;
+        display: block;
+        border-radius: 200px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 65px;
+        background: transparent;
+        border: 1px solid white;
+      }
+
+    }
+
+    &:hover {
+      background: rgba(#F4F4F4, .3);
+      transition: all .3s ease-in;
+    }
+  }
+}

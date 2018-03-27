@@ -1,5 +1,3 @@
-//import Joi from 'joi'
-
 import { APP_IP, APP_PORT } from '../path/Conf'
 
 // There are three possible states for our login
@@ -96,18 +94,6 @@ export function createUser(creds) {
           const newUser = {user: user.pseudo, password: user.password}
           dispatch(loginUser(newUser))
         }
-
-        // if (!response.ok) {
-        //   // If there was a problem, we want to
-        //   // dispatch the error condition
-        //   dispatch(loginError(user.message))
-        //   return Promise.reject(user)
-        // } else {
-        //   // If login was successful, set the token in local storage
-        //   localStorage.setItem('id_token', user.id_token)
-        //   // Dispatch the success action
-        //   dispatch(receiveLogin(user))
-        // }
       })
 
     })

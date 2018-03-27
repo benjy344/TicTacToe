@@ -1,0 +1,24 @@
+@import "reset";
+
+body{
+  padding-top: 5%;
+  height: 100vh;
+  color:#6a6f8c;
+  background: url('../img/bg.jpg') no-repeat center;
+  background-size: cover;
+  font:600 16px/18px 'Open Sans',sans-serif;
+}
+
+*,:after,:before{box-sizing:border-box}
+.clearfix:after,.clearfix:before{content:'';display:table}
+.clearfix:after{clear:both;display:block}
+
+a{color:inherit;text-decoration:none}
+
+#app {
+  min-height: 100%;
+}
+
+@import "form";
+@import "configGame";
+@import "gameBoard";
