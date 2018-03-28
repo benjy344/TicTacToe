@@ -77,6 +77,10 @@ a {
   padding: 90px 70px 50px 70px;
   background: rgba(36, 35, 34, 0.5); }
 
+.errorMessage {
+  font-weight: 100;
+  color: #de1e1e; }
+
 .login-html .sign-in-htm,
 .login-html .sign-up-htm {
   top: 0;

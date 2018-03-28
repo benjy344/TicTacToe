@@ -33,6 +33,7 @@ module.exports = server => {
     server.subscription(Paths.game.start+'/{id}')
     server.subscription(Paths.game.play+'/{id}')
 
+
     server.route({
       method: 'POST',
       path: Paths.game.start,
@@ -100,6 +101,19 @@ module.exports = server => {
         tags: ['api'],
         handler: (request, reply) => {
           server.broadcast(request.auth.credentials)
+        }
+      }
+    })
+
+    server.route({
+      method: 'GET',
+      path: Paths.game.quit,
+      config: {
+        id:'quit',
+        auth: 'jwt',
+        tags: ['api'],
+        handler: (request, reply) => {
+          server.broadcast({disconnect:true, creds:request.auth.credentials})
         }
       }
     })

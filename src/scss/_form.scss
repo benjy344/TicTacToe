@@ -8,7 +8,6 @@
   background: url('../img/bg.jpg') no-repeat center;
   background-size: cover;
   box-shadow:0 12px 15px 0 rgba(0,0,0,.24),0 17px 50px 0 rgba(0,0,0,.19);
-  //https://raw.githubusercontent.com/khadkamhn/day-01-login-form/master/img/bg.jpg
 }
 .login-html{
   width:100%;
@@ -17,6 +16,10 @@
   padding:90px 70px 50px 70px;
   background:rgba(#242322,.5);
 }
+.errorMessage {
+  font-weight: 100;
+  color: #de1e1e;
+}
 .login-html .sign-in-htm,
 .login-html .sign-up-htm{
   top:0;
@@ -24,15 +27,10 @@
   right:0;
   bottom:0;
   position:absolute;
-  //transform:rotateY(180deg);
-  //backface-visibility:hidden;
+
   transition:all .4s linear;
 }
-// .login-html .sign-in,
-// .login-html .sign-up,
-// .login-form .group .check{
-//   //display:none;
-// }
+
 .login-html .tab,
 .login-form .group .label,
 .login-form .group .button{
@@ -55,8 +53,7 @@
   min-height:345px;
   position:relative;
   margin: 20px 0;
-  //perspective:1000px;
-  //transform-style:preserve-3d;
+
 }
 .login-form .group{
   margin: 30px 0;

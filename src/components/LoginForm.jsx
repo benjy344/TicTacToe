@@ -42,7 +42,7 @@ class LoginForm extends Component {
     if(this.props.errorMessage) {
       return (
         <div>
-          <p>{this.props.errorMessage}</p>
+          <p className="errorMessage">{this.props.errorMessage}</p>
         </div>
       )
     }
@@ -71,6 +71,7 @@ class LoginForm extends Component {
                 <label htmlFor="password" className="label">Password</label>
                 <input className="input" name="password" type="password" value={this.state.credentials.password} placeholder="Password" onChange={this.onChange.bind(this)} />
               </div>
+              {this.errorMessage()}
               <div className="group">
                 <button type="Sign in" onClick={this.onSave.bind(this)}>Submit</button>
               </div>

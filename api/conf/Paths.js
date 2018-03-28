@@ -18,7 +18,8 @@ module.exports = {
         destroy: `${path}session/destroy`
     },
     game: {
-        wait: `${path}wait`,
+        wait: `${path}game/wait`,
+        quit: `${path}game/quit`,
         create: `${path}game/create`,
         start: `${path}game/start`,
         play: `${path}game/play`,
