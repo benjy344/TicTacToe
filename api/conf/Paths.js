@@ -20,6 +20,7 @@ module.exports = {
     game: {
         wait: `${path}game/wait`,
         quit: `${path}game/quit`,
+        disconnect: `${path}game/disconnect`,
         create: `${path}game/create`,
         start: `${path}game/start`,
         play: `${path}game/play`,

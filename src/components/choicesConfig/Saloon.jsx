@@ -7,12 +7,14 @@ import SelectPlayer         from './SelectPlayer'
 import Store                from '../../GlobalStore/Store'
 import {addPlayer}          from '../../actions/gameConfig'
 
+const socket = `ws://${APP_IP}:${APP_PORT}`
+const client = new Nes.Client(socket)
+
 class Saloon extends Component {
 
   constructor(props) {
     super(props)
-    const socket = `ws://${APP_IP}:${APP_PORT}`
-    this.client = new Nes.Client(socket)
+
     this.state = {
       loading: false,
       player: jwt.verify(localStorage.getItem('id_token'), 'patate'),
@@ -27,13 +29,12 @@ class Saloon extends Component {
     })
 
 
-    this.client.connect({ auth: { headers: { Authorization: 'Bearer ' + localStorage.getItem('id_token') } } }, err => {
+    client.connect({ auth: { headers: { Authorization: 'Bearer ' + localStorage.getItem('id_token') } } }, err => {
         if (err) {
           return console.log('err connecting', err)
         }
-        this.client.onUpdate = update => {
-          console.log(update)
-          if(update.disconnect) {
+        client.onUpdate = update => {
+          if(update.disconnect && this.state.player.iat !== update.creds.iat) {
             const newUsers = _.filter(this.state.players, (player) => {
               return player.iat !== update.creds.iat
             })
@@ -50,7 +51,7 @@ class Saloon extends Component {
                 if(player.iat === update.iat) alreadyExist = true
               }
               if(!alreadyExist) {
-                this.client.request('wait', (err, data, statusCode) => {
+                client.request('wait', (err, data, statusCode) => {
                   if(err) console.log(err)
                 })
                 let temp = this.state.players
@@ -63,19 +64,17 @@ class Saloon extends Component {
             }
           }
         }
-        this.client.request('wait', (err, data, statusCode) => {
+        client.request('wait', (err, data, statusCode) => {
           if(err) console.log(err)
         })
     })
   }
 
   componentWillUnmount() {
-    this.client.request('quit', (err, data, statusCode) => {
+    client.request('quit', (err, data, statusCode) => {
       if(err) console.log(err)
-      this.client.disconnect()
+      client.disconnect()
     })
-
-
   }
 
   selectPlayer(player2) {

@@ -12,6 +12,9 @@ import { updateGame }       from '../actions/game'
 import Board                from './game/Board'
 import Store                from '../GlobalStore/Store'
 
+const socket = `ws://${APP_IP}:${APP_PORT}`
+const client = new Nes.Client(socket)
+
 
 class Game extends Component {
   constructor(props) {
@@ -21,6 +24,7 @@ class Game extends Component {
         X:this.props.game.player1,
         O:this.props.game.player2
       },
+      disconnectMessage: null,
       loading: true
     }
   }
@@ -42,12 +46,16 @@ class Game extends Component {
   }
 
   componentDidMount() {
-    const socket = `ws://${APP_IP}:${APP_PORT}`
-    const client = new Nes.Client(socket)
-
     const handler = (update, flags) => {
       if(update) {
         Store.dispatch(updateGame(update))
+      }
+    }
+    const disconnect = (update, flags) => {
+      if(update && update.creds.id !== jwt.verify(localStorage.getItem('id_token'), 'patate').id) {
+        this.setState({
+          disconnectMessage: update.creds.pseudo+' is desconnected'
+        })
       }
     }
 
@@ -58,11 +66,21 @@ class Game extends Component {
       client.subscribe('/game/play/'+jwt.verify(localStorage.getItem('id_token'), 'patate').id, handler, (err)=> {
         if(err) console.log(err)
       })
+      client.subscribe('/game/disconnect/'+this.props.game.player1, disconnect, (err)=> {
+        if(err) console.log(err)
+      })
+    })
+  }
+
+  componentWillUnmount() {
+    client.request('disconnect', (err, data, statusCode) => {
+      if(err) console.log(err)
+      client.disconnect()
     })
   }
 
   handleClick(i) {
-    if(!this.isPlayerTurn() || this.props.game.winner ) return
+    if(!this.isPlayerTurn() || this.props.game.winner || this.state.disconnectMessage) return
     const history = this.props.game.history.slice(0, this.props.game.stepNumber + 1)
     const current = history[history.length - 1]
     const squares = current.squares.slice()
@@ -136,6 +154,10 @@ class Game extends Component {
           status = this.props.player2.pseudo + " is playing ..."
         }
       }
+    }
+
+    if(this.state.disconnectMessage) {
+      status = this.state.disconnectMessage
     }
 
 

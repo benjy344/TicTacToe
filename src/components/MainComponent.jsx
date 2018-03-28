@@ -73,6 +73,7 @@ class MainComponent extends Component {
   }
 
   play() {
+    console.log("-----------play")
     let player1 = jwt.verify(localStorage.getItem('id_token'), 'patate').id
     let player2 = (this.props.player2?this.props.player2.id: 'ia')
 
