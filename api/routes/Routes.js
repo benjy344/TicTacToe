@@ -93,7 +93,7 @@ module.exports = server => {
 
     server.route({
       method: 'GET',
-      path: '/wait',
+      path: Paths.game.wait,
       config: {
         id:'wait',
         auth: 'jwt',
@@ -101,6 +101,17 @@ module.exports = server => {
         handler: (request, reply) => {
           server.broadcast(request.auth.credentials)
         }
+      }
+    })
+
+    server.route({
+      method: 'GET',
+      path: Paths.users.getStats,
+      config: {
+        id:'getStats',
+        auth: 'jwt',
+        tags: ['api'],
+        handler: UserController.getStats
       }
     })
 

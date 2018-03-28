@@ -14,13 +14,7 @@ import ConfigGame           from './ConfigGame'
 import Game                 from './Game'
 import { APP_IP, APP_PORT } from '../path/Conf'
 import IaGame               from './IaGame.jsx'
-
-import ReactEchartsCore from 'echarts-for-react/lib/core'
-import echarts from 'echarts/lib/echarts'
-import 'echarts/lib/chart/pie'
-import 'echarts/lib/component/tooltip'
-import 'echarts/lib/component/legend'
-import 'echarts/lib/component/title'
+import Stats                from './Stats.jsx'
 
 
 
@@ -30,7 +24,8 @@ class MainComponent extends Component {
     super(props)
     this.state = {
       startGame: false,
-      playIaGame: false
+      playIaGame: false,
+      showStats: false
     }
   }
 
@@ -91,32 +86,24 @@ class MainComponent extends Component {
   goBack() {
     this.setState({
       playIaGame: false,
-      startGame: false
+      startGame: false,
+      showStats: false
+    })
+  }
+  showStats() {
+    this.setState({
+      showStats: true
     })
   }
 
   render() {
-
-    return {
-      <ReactEchartsCore
-  echarts={echarts}
-  option={this.getOption()}
-  notMerge={true}
-  lazyUpdate={true}
-  theme={"theme_name"}
-  onChartReady={this.onChartReadyCallback}
-  onEvents={EventsDict}
-  opts={} />
-    }
-
-  }
-
-  rrrender() {
     return (
       <div className="game">
-        {(this.state.startGame || this.state.playIaGame) &&
+        {(this.state.startGame || this.state.playIaGame || this.state.showStats) &&
           <button className='goBack' onClick={this.goBack.bind(this)}>Configuration</button>}
-        {(!this.state.startGame && !this.state.playIaGame) &&
+        {(!this.state.startGame && !this.state.playIaGame && !this.state.showStats) &&
+          <button className='goBack' onClick={this.showStats.bind(this)}>Stats</button>}
+        {(!this.state.showStats && !this.state.startGame && !this.state.playIaGame) &&
         <ConfigGame
           changeSingle={this.changeSingle.bind(this)}
           changeLevel={this.changeLevel.bind(this)}
@@ -132,6 +119,8 @@ class MainComponent extends Component {
           <Game />}
         {this.state.playIaGame &&
           <IaGame />}
+        {this.state.showStats &&
+          <Stats />}
 
       </div>
 

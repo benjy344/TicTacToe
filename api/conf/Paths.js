@@ -10,7 +10,8 @@ module.exports = {
         createUsers: `${path}users/create`
     },
     users: {
-        getById: `${path}users/{id}`
+        getById: `${path}users/{id}`,
+        getStats: `${path}users/{id}/getStats`
     },
     session: {
         create: `${path}session/create`,

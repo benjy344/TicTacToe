@@ -10,6 +10,35 @@ const UserController = {
       console.log(users)
     })
   },
+  getStats: (request, reply) => {
+    console.log(request.params)
+    User.findOne({'_id':request.params.id}, (err, user) => {
+      const stats = {total:0, win:0, lose:0, equality: 0}
+      if(err) console.log('error get stats', err)
+      if(user) {
+        stats.total = user.games.length
+        for (let i = 0, len = user.games.length; i < len; i++) {
+          let game = user.games[i]
+          switch (game.status) {
+            case "win":
+              stats.win++
+              break;
+            case "lose":
+              stats.lose++
+              break;
+            case "equality":
+              stats.equality++
+              break;
+            default:
+              break;
+          }
+        }
+      }
+      reply(stats, null)
+
+
+    })
+  },
   getUserById: (request, cb) => {
     User.findOne({_id:request.params.id}, (err, user) => {
       if(err || !user){

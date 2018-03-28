@@ -124,7 +124,7 @@ class Game extends Component {
       if (winner) {
         if(winner.equality) {
           status = "It's a equality"
-        }else if(winner === this.props.player2.id) {
+        }else if(winner.id && winner.id === this.props.player2.id) {
           status = "Winner: " + this.props.player2.pseudo
         } else {
           status = "You Win !"

@@ -1,5 +1,6 @@
 import Mongoose from 'mongoose'
 import Game     from '../../models/gameModel.js'
+import User     from '../../models/userModel.js'
 
 const GameController = {
 
@@ -90,6 +91,7 @@ const GameController = {
       // set the winner
       //return
       let winner = (calculateWinner.winner==="X"?player1:player2)
+      let loser  = (calculateWinner.winner==="X"?player2:player2)
 
       winner.line = calculateWinner.line+1
       Game.findOneAndUpdate(
@@ -106,11 +108,28 @@ const GameController = {
       .then( (game, err)=> {
         if(err) console.log('error get game =>', err)
         cb(game)
+        User.findOneAndUpdate(
+            {'_id':winner.id},
+            {$push: {games: {status:'win', date: new Date()}}},
+            {safe: true, upsert: true},
+            (doc, err) => {
+              console.log(doc, err)
+              User.findOneAndUpdate(
+                {'_id':loser.id},
+                {$push: {games: {status:'lose', date: new Date()}}},
+                {safe: true, upsert: true},
+                (doc, err) => {
+                console.log(doc, err)
+              }
+              )
+            }
+
+          )
+
         return
       })
 
     } else {
-      console.log(history.length)
       if(history.length >= 9) {
         // equality
         Game.findOneAndUpdate(
@@ -127,6 +146,20 @@ const GameController = {
         .then( (game, err)=> {
           if(err) console.log('error get game =>', err)
           cb(game)
+          User.findOneAndUpdate(
+            {'_id':player1.id},
+            {$push: {games: {status:'equality', date: new Date()}}},
+            {safe: true, upsert: true}
+          ).catch((err) => {
+            console.log('err find and user', err)
+          })
+          User.findOneAndUpdate(
+            {'_id':player2.id},
+            {$push: {games: {status:'equality', date: new Date()}}},
+            {safe: true, upsert: true}
+          ).catch((err) => {
+            console.log('err find and user', err)
+          })
           return
         })
       } else {
@@ -162,7 +195,11 @@ const GameController = {
     const clickIa = payload.clickIa
 
     squares[click] = shape
-    if(clickIa) squares[clickIa] = (shape==='X'?"O":"X")
+    let calculateWinner = GameController.calculateWinner(squares)
+    if(clickIa && !calculateWinner) {
+      squares[clickIa] = (shape==='X'?"O":"X")
+      calculateWinner = GameController.calculateWinner(squares)
+    }
 
     const newHistory = history.concat(
       [
@@ -171,7 +208,7 @@ const GameController = {
         }
       ])
 
-    const calculateWinner = GameController.calculateWinner(squares)
+
     if (calculateWinner) {
       // set the winner
       //return
@@ -195,6 +232,23 @@ const GameController = {
       .then( (game, err)=> {
         if(err) console.log('error get game =>', err)
         cb(game)
+        if(winner.pseudo !== 'ia') {
+          User.findOneAndUpdate(
+            {'_id':player1.id},
+            {$push: {games: {status:'win', date: new Date()}}},
+            {safe: true, upsert: true}
+          ).catch((err) => {
+            console.log('err find and user', err)
+          })
+        } else {
+          User.findOneAndUpdate(
+            {'_id':player1.id},
+            {$push: {games: {status:'lose', date: new Date()}}},
+            {safe: true, upsert: true}
+          ).catch((err) => {
+            console.log('err find and user', err)
+          })
+        }
         return
       })
 
@@ -213,6 +267,13 @@ const GameController = {
         .then( (game, err)=> {
           if(err) console.log('error get game =>', err)
           cb(game)
+          User.findOneAndUpdate(
+            {'_id':player1.id},
+            {$push: {games: {status:'equality', date: new Date()}}},
+            {safe: true, upsert: true}
+          ).catch((err) => {
+              console.log('err find and user', err)
+            })
           return
         })
       } else {
