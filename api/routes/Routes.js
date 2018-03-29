@@ -40,6 +40,7 @@ module.exports = server => {
       path: Paths.game.start,
       config: {
         auth: 'jwt',
+        description: 'Call when a player wants to start a multiplayer game with a specific player',
         tags: ['api'],
         handler: (request, h) => {
           const payload = JSON.parse(request.payload)
@@ -54,6 +55,7 @@ module.exports = server => {
       path: Paths.game.play,
       config: {
         auth: 'jwt',
+        description: 'Call when a player play a run',
         tags: ['api'],
         handler: (req, cb) => {
           const payload = JSON.parse(req.payload)
@@ -70,6 +72,7 @@ module.exports = server => {
       path: Paths.game.playIa,
       config: {
         auth: 'jwt',
+        description: 'Call when a player wants to start a game against IA',
         tags: ['api'],
         handler: (req, cb) => {
           const payload = JSON.parse(req.payload)
@@ -83,22 +86,11 @@ module.exports = server => {
 
     server.route({
       method: 'GET',
-      path: Paths.intern.path,
-      config: {
-        auth: false,
-        tags: ['api'],
-        handler: (request, h) => {
-          return 'Hello!'
-        }
-      }
-    })
-
-    server.route({
-      method: 'GET',
       path: Paths.game.wait,
       config: {
         id:'wait',
         auth: 'jwt',
+        description: 'Call when a player wait on the salloon',
         tags: ['api'],
         handler: (request, reply) => {
           server.broadcast(request.auth.credentials)
@@ -112,6 +104,7 @@ module.exports = server => {
       config: {
         id:'quit',
         auth: 'jwt',
+        description: 'Call when a player quit the saloon',
         tags: ['api'],
         handler: (request, reply) => {
           server.broadcast({disconnect:true, creds:request.auth.credentials})
@@ -125,6 +118,7 @@ module.exports = server => {
       config: {
         id:'disconnect',
         auth: 'jwt',
+        description: 'Call when a player quit a running party',
         tags: ['api'],
         handler: (request, reply) => {
           console.log(request.auth.credentials.pseudo+' is disconnected')
@@ -138,6 +132,7 @@ module.exports = server => {
       path: Paths.users.getStats,
       config: {
         id:'getStats',
+        description: 'Return stats for a specific player',
         auth: 'jwt',
         tags: ['api'],
         handler: UserController.getStats
@@ -149,6 +144,7 @@ module.exports = server => {
       path: Paths.users.getById,
       config: {
         auth: 'jwt',
+        description: 'Get user by id',
         tags: ['api'],
         handler: UserController.getUserById
       }
@@ -159,6 +155,7 @@ module.exports = server => {
       path: Paths.intern.users,
       config: {
         auth: 'jwt',
+        description: 'Return all users',
         tags: ['api'],
         handler: UserController.getUsers
       }
@@ -170,6 +167,7 @@ module.exports = server => {
       config: {
         auth: 'jwt',
         tags: ['api'],
+        description: 'Create a new game',
         validate: {
           payload: {
             player1: Joi.string().alphanum().required(),
@@ -192,6 +190,7 @@ module.exports = server => {
       config: {
         auth: false,
         tags: ['api'],
+        description: 'Create an user',
         validate: {
           payload: {
             username: Joi.string().alphanum().min(3).max(30).required(),
@@ -214,6 +213,7 @@ module.exports = server => {
       path: Paths.session.create,
       config: {
         auth: false,
+        description: 'Create session',
         handler: SessionController.create
       }
     })

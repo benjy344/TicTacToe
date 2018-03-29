@@ -5,9 +5,12 @@ import bcrypt   from 'bcrypt'
 const UserController = {
 
   getUsers: (request, reply) => {
-    console.log('getUsers')
     User.find({}, (err, users) => {
-      console.log(users)
+      if(err) console.log('error get users', err)
+      if(users) {
+        reply({users: users}).code(200)
+        return
+      }
     })
   },
   getStats: (request, reply) => {
