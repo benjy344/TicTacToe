@@ -8,7 +8,7 @@ import Store                from '../../GlobalStore/Store'
 import {addPlayer}          from '../../actions/gameConfig'
 
 const socket = `ws://${APP_IP}:${APP_PORT}`
-const client = new Nes.Client(socket)
+let   client = new Nes.Client(socket)
 
 class Saloon extends Component {
 
@@ -19,7 +19,8 @@ class Saloon extends Component {
       loading: false,
       player: jwt.verify(localStorage.getItem('id_token'), 'patate'),
       players: [],
-      selectedPlayer: null
+      selectedPlayer: null,
+      isMounted: false
     }
   }
 
@@ -27,54 +28,66 @@ class Saloon extends Component {
     this.setState({
       loading: true
     })
-
-
+    client = new Nes.Client(socket)
     client.connect({ auth: { headers: { Authorization: 'Bearer ' + localStorage.getItem('id_token') } } }, err => {
         if (err) {
           return console.log('err connecting', err)
         }
         client.onUpdate = update => {
-          if(update.disconnect && this.state.player.iat !== update.creds.iat) {
-            const newUsers = _.filter(this.state.players, (player) => {
-              return player.iat !== update.creds.iat
-            })
-            this.setState({
-              players: newUsers,
-              loading: (newUsers.length === 0)
-            })
-          }
-          if(update.iat) {
-            if(this.state.player.iat !== update.iat) {
-              let alreadyExist = false
-              for (let i = 0, len = this.state.players.length; i < len; i++) {
-                const player = this.state.players[i];
-                if(player.iat === update.iat) alreadyExist = true
-              }
-              if(!alreadyExist) {
-                client.request('wait', (err, data, statusCode) => {
-                  if(err) console.log(err)
-                })
-                let temp = this.state.players
-                temp.push(update)
-                this.setState({
-                  players: temp,
-                  loading: false
-                })
+          if(this.state.isMounted){
+            if(update.disconnect && this.state.player.iat !== update.creds.iat) {
+              const newUsers = _.filter(this.state.players, (player) => {
+                return player.iat !== update.creds.iat
+              })
+              this.setState({
+                players: newUsers,
+                loading: (newUsers.length === 0)
+              })
+            }
+            if(update.iat) {
+              if(this.state.player.iat !== update.iat) {
+                let alreadyExist = false
+                for (let i = 0, len = this.state.players.length; i < len; i++) {
+                  const player = this.state.players[i];
+                  if(player.iat === update.iat) alreadyExist = true
+                }
+                if(!alreadyExist) {
+                  client.request('wait', (err, data, statusCode) => {
+                    if(err) console.log(err)
+                  })
+                  let temp = this.state.players
+                  temp.push(update)
+                  this.setState({
+                    players: temp,
+                    loading: false
+                  })
+                }
               }
             }
           }
+
         }
         client.request('wait', (err, data, statusCode) => {
           if(err) console.log(err)
         })
     })
   }
+  componentWillMount() {
+    this.setState({
+      isMounted: true
+    })
+  }
 
   componentWillUnmount() {
-    client.request('quit', (err, data, statusCode) => {
-      if(err) console.log(err)
-      client.disconnect()
+    this.setState({
+      isMounted: false
+    }, () => {
+      client.request('quit', (err, data, statusCode) => {
+        if(err) console.log(err)
+        //client.disconnect()
+      })
     })
+
   }
 
   selectPlayer(player2) {

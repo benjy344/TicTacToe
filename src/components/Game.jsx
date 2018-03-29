@@ -13,7 +13,7 @@ import Board                from './game/Board'
 import Store                from '../GlobalStore/Store'
 
 const socket = `ws://${APP_IP}:${APP_PORT}`
-const client = new Nes.Client(socket)
+let   client = new Nes.Client(socket)
 
 
 class Game extends Component {
@@ -52,13 +52,14 @@ class Game extends Component {
       }
     }
     const disconnect = (update, flags) => {
+      console.log('disconnectMessage')
       if(update && update.creds.id !== jwt.verify(localStorage.getItem('id_token'), 'patate').id) {
         this.setState({
           disconnectMessage: update.creds.pseudo+' is desconnected'
         })
       }
     }
-
+    client = new Nes.Client(socket)
     client.connect({ auth: { headers: { Authorization: 'Bearer ' + localStorage.getItem('id_token') } } }, err => {
       if (err) {
         return console.log('err connecting', err)
@@ -75,7 +76,7 @@ class Game extends Component {
   componentWillUnmount() {
     client.request('disconnect', (err, data, statusCode) => {
       if(err) console.log(err)
-      client.disconnect()
+      //client.disconnect()
     })
   }
 

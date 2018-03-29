@@ -127,6 +127,7 @@ module.exports = server => {
         auth: 'jwt',
         tags: ['api'],
         handler: (request, reply) => {
+          console.log(request.auth.credentials.pseudo+' is disconnected')
           server.publish(`${Paths.game.disconnect}/${request.auth.credentials.id}`, {disconnect:true, creds:request.auth.credentials})
         }
       }
